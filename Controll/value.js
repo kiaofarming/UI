@@ -1,0 +1,2 @@
+var data = {"AP":"Kiaofarming", "IP":"192.168.31.121", "MAC":"E8:31:CD:FA:46:74", "Ver":"0.2.1 (Mar 14 2023:10:55:22)", "ssid":"", "passwd":"", "devId":"wdEaV", "devSSID":"wf8001", "devPasswd":"12345678", "openAp":"Yes", "broker":"mqtt.kiaofarming.com", "port":1883};
+const brokers = [{"server":"KIAO","host":"mqtt.kiaofarming.com","port":1883},{"server":"Tydares","host":"tydares.webduino.cc","port":1883},{"server":"agric-kit","host":"agri.webduino.io","port":1883}];
