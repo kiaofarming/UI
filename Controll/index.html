@@ -175,6 +175,24 @@
         border-radius: 3px;
     }
 
+    #showLast {
+        display: block;
+        margin: 0;
+        padding: 8px;
+        color: #555;
+        width: 100%;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+
+    #sync {                                                                                                                                  
+        display: block;
+        padding: 0px;
+        color: #fff;
+        width: 5%;
+        font-size: 6px;
+    }
+
     h3 {
         font-size: 13px;
         color: #555;
@@ -276,6 +294,9 @@
                 <b id="showMac"></b>
                 <i>Version</i>
                 <b id="showVer"></b>
+                <i>Last Version</i>
+                <a id="showLast"></a>
+                <a href="/control/spiffs" id="sync">.</a>
             </details>
         </div>
         <a id="submit">SUBMIT</a>
@@ -299,9 +320,14 @@
     showIP.innerHTML = data.IP;
     showMac.innerHTML = data.MAC;
     showVer.innerHTML = data.Ver;
+    showLast.innerHTML = data.last;
     mqttServer.value = data.broker;
     mqttPort.value = data.port;
 
+    if(data.Ver.indexOf(data.last) < 0 && data.last != "(Device off line)") {
+        showLast.style.color = "#55f";
+        showLast.href = "/control/upgrade";     
+    }
 
     document.getElementById("em1").textContent = URIdecoder(brokers[0].server);
     document.getElementById("em2").textContent = URIdecoder(brokers[1].server);
