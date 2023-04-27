@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -19,7 +22,7 @@
 
             <div class="menu-list">
                 <ul>
-                    <li class="add">+ 新增控制器</li>
+                    <li id="show" class="add">+ 新增控制器</li>
                     <li class="use">調光LED燈</li>
                     <li class="unuse">未啟動</li>
             </div>
@@ -29,229 +32,279 @@
             <div class="column">
                 <h3 id="submit">調光LED燈</h3>
 
+            </div>
+        </div>
+
+        <div id="zone" class="button">
+            <h3 style="text-align: left;margin-left: 60px;">開關狀態</h3>
+            <div id="switch">
                 <div class="flex-container">
-                    <div>
-                        <h2 style="color: #1C8686;"><b>帝輝</b></h2>
-                        <p>田區</p>
+                    <div id="bt1" class="zone-btn">
+                        <h4>風扇</h4>
+
+                        <span id="state" style="text-align: center;">OFF</span>
                     </div>
-                    <div style="margin-left: 0px;">
-                        <img src="./images/Sprout-01.png" width="110px" alt="">
+                    <div id="bt2" class="zone-btn">
+
+                        <h4>灑水</h4>
+
+                        <span id="state2" style="text-align: center;">OFF</span>
                     </div>
                 </div>
-                <table>
-                    <tr>
-                        <td>
-                            <p class="SSID">SSID</p>
-                        </td>
-                        <td>
-                            <h3>ta5793</h3>
-                        </td>
-                        <td>
-                            <h3>｜</h3>
-                        </td>
-                        <td>
-                            <p class="SSID">流量</p>
-                        </td>
-                        <td>
-                            <h3>0</h3>
-                        </td>
-                    </tr>
-                </table>
-
-
             </div>
         </div>
-        <div class="slideshow-container">
-            <div class="mySlides fade">
-                <h3 style="text-align: left;margin-left: 60px;">開關狀態</h3>
-                <div id="switch">
-                    <div class="flex-container">
-                        <div class="main">
+        <dialog id="infoModal">
 
-                            <svg fill="currentColor" id="圖層_1" data-name="圖層 1" xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 280.32 280.32">
-                                <path
-                                    d="M166.48,179.25A70.34,70.34,0,0,0,162,167.16c-1.12-2.19-2.29-2.54-4.49-1.48-.86.44-1.67.95-2.48,1.44a26.81,26.81,0,0,1-13.6,4,30.14,30.14,0,0,1-14.07-3.23c-3.52-1.74-5.35-1-7.07,2.26-1.18,2.26-2.25,4.58-3.44,6.85-5.47,10.42-13.44,17.66-25.36,20a48.4,48.4,0,0,0-10.63,2.91c-6.39,2.86-8.31,8.76-4.82,14.81a18.17,18.17,0,0,0,1.76,2.59c14.53,18.05,33.3,27.56,57.53,28.12a35.16,35.16,0,0,0,6.15-.45c11.17-1.46,19.63-6.95,24.52-17.23,3.93-8.25,4.86-17.17,4.52-26.17A89.24,89.24,0,0,0,166.48,179.25Z" />
-                                <path
-                                    d="M243,141.77c-2-15-10.34-24.27-25.08-27.83-18.52-4.48-35.88-.45-52.88,6.9-2.32,1-2.61,2.26-1.22,4.4,1.89,2.89,3.7,5.83,4.39,9.24,1.44,7.17,1.71,14.22-2.19,20.9-2,3.46-1.09,5.79,2.63,7.12a57.66,57.66,0,0,1,7,3.58c11.38,6,18.17,15.23,20.17,28a36.15,36.15,0,0,0,1.77,6.7c2.62,7.28,9.53,9.64,16,5.4a53.55,53.55,0,0,0,11.74-10.49c11.2-13.25,17.62-28.35,18.2-45.77A48.32,48.32,0,0,0,243,141.77Z" />
-                                <path
-                                    d="M124.64,118c9.22-5.71,18.73-6.16,28.53-1.62,4.29,2,5.78,1.42,7.78-3a56,56,0,0,1,9-14.66c6.45-7.28,14.63-11.08,24.15-12.42,4.87-.69,9.49-2.25,11.66-7.22s-.24-8.93-3.24-12.69A66.06,66.06,0,0,0,184,50c-14.37-8.32-29.55-13.14-46.43-9.8-10.45,2.06-18.6,7.1-23,17.17-3.19,7.31-3.88,15.09-4.27,22.19a98.38,98.38,0,0,0,8,36.48C120,120.1,120.8,120.37,124.64,118Z" />
-                                <path
-                                    d="M77.63,172.14c13.37.24,25.21-3.29,36.73-7.9,3.9-1.52,4.24-2.51,2-6a28.83,28.83,0,0,1-4.67-18.43,35.68,35.68,0,0,1,3.29-11.2c1.49-3.36.8-4.91-2.51-6.52-1.51-.73-3.07-1.34-4.57-2.09-13.33-6.7-21.7-17-23.51-32.13a17.24,17.24,0,0,0-.8-3.24c-2.9-8.78-10.67-11.1-17.9-5.37A66.14,66.14,0,0,0,54.62,89.8c-12.62,16-19.73,33.74-16.33,54.62,2.16,13.31,9.52,22,22.63,25.58A55.19,55.19,0,0,0,77.63,172.14Z" />
-                                <path
-                                    d="M140.52,119.89c-12,.16-22.27,10.33-22.27,22.16h0a22.15,22.15,0,0,0,44.3.24C162.52,130.3,152.18,119.76,140.52,119.89Z" />
-                            </svg>
 
-                            <h4>風扇</h4>
-                            <p id="fanswitch">OFF</p>
-                        </div>
 
-                        <div class="main2">
+            <div>
 
-                            <svg fill="currentColor" id="圖層_1" data-name="圖層 1" xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 280.32 280.32">
-                                <path
-                                    d="M202.46,172q-15.08-36.66-30.2-73.27c-1.07-2.59-2.09-5.38-5.61-5.39s-4.37,2.83-5.37,5.3q-14.7,35.11-29.34,70.26c-2.41,5.78-4.18,11.73-4.09,18.66,0,23.9,23,42.41,46.84,37.25C197.46,219.88,212,195.13,202.46,172Zm-17.93,37.11a4.16,4.16,0,0,1-2.07,1.14,2,2,0,0,1-2.11-.78,1.69,1.69,0,0,1,0-2.21c1-1.09,2-2.09,3-3.09,6.53-6.5,8.71-14.22,6.71-23.22-.24-1.09-.55-2.17-.71-3.27-.2-1.26,0-2.45,1.5-2.8s2.08.57,2.51,1.68a26.33,26.33,0,0,1,2,9A29.36,29.36,0,0,1,184.53,209.14Z" />
-                                <path
-                                    d="M101.6,96.11c-.6-1.43-1.49-2.76-3.28-2.69s-2.59,1.39-3.2,2.84c-6.26,15-13,29.88-18.57,45.16-3.42,9.21-1.31,17.64,6,24.21C89.71,172.07,98.2,174,107.2,170c8.8-3.86,13.8-10.76,14.14-20.62a20.48,20.48,0,0,0-1.36-8.27C114.24,125.94,107.89,111,101.6,96.11Zm10.54,52.06c.13,4.56-1.26,8.49-4.85,11.52a4.79,4.79,0,0,1-2,1.18,2,2,0,0,1-2.33-.81,1.72,1.72,0,0,1,.23-2.2c.52-.61,1.09-1.18,1.6-1.78,2.76-3.26,3.95-6.92,2.6-11.12-.57-1.7-.46-3.1,1.43-3.7s2.43,1,2.89,2.4A14.87,14.87,0,0,1,112.14,148.17Z" />
-                                <path
-                                    d="M132.72,100.55c6.52-1.48,10.63-6.73,10.63-13.73a9,9,0,0,0-.53-3.82q-5.12-12.77-10.28-25.55a2.46,2.46,0,0,0-2.25-1.87c-1.26,0-1.76.94-2.18,1.94-3.71,8.66-7.5,17.28-10.65,26.16a11.52,11.52,0,0,0,.39,8.87C120.46,98.36,127,101.84,132.72,100.55Z" />
-                            </svg>
-                            <h4>灑水</h4>
-                            <p id="wetswitch">OFF</p>
-                        </div>
-                    </div>
+                <label>設備名稱 <input type="text" /></label>
+                <label>SSID <input type="text" /></label>
+                <label>DeviceID <input type="text" /></label>
+                <label>第1路開關名稱 <input type="text" /></label>
+                <br>
+                <label>第2路開關名稱 <input type="text" /></label>
+
+                <div id="valid_msg"></div>
+
+
+                <div class="buttons">
+                    <div id="close" class="cancelBtn">關閉</div>
                 </div>
-            </div>
+        </dialog>
 
-            <div class="mySlides fade">
-                <div class="page2">
-                    <h4>行程設定 ></h4>
-                </div>
-                <div class="flex-container2">
-                    <div class="btn3">
-                        <h4>行程</h4>
-                        <p id="btn3switch">OFF</p>
-                    </div>
-                    <div class="btn4">
-                        <h4>互斥功能</h4>
-                        <p  id="btn4switch">OFF</p>
-                    </div>
-                </div>
-            </div>
-
-            <a class="prev" onclick="plusSlides(-1)">❮</a>
-            <a class="next" onclick="plusSlides(1)">❯</a>
-        </div>
     </div>
 
-
-
-
-
 </body>
+
 <script language="JavaScript"></script>
 <script>
-    /*fan*/
-    function getSelectedOptions() {
-        var selectedOptions = [];
-        var divs = document.getElementsByClassName("main");
-        for (var i = 0; i < divs.length; i++) {
-            if (buttons[i].classList.contains("select")) {
-                selectedOptions.push(divs[i].value);
-            }
-        }
+    //** 按下設備開關後，發送命令給伺服端( set_switch() )*//
+    const API_HOST = "https://mqtt.kiaofarming.com";
+    const API_VER = "v1";
 
-    }
-    var divs = document.getElementsByClassName("main");
-    for (var i = 0; i < divs.length; i++) {
-        divs[i].addEventListener("click", function () {
-            this.classList.toggle("select");
-            var fanText = document.getElementById("fanswitch");
-            if (this.classList.contains("select")) {
-                fanText.innerHTML = "ON";
-            } else {
-                fanText.innerHTML = "OFF";
-            }
+    const ATTR_DISABLED = "disabled";
+
+    function set_switch(dev_id, port, sw, cb) {
+        let req_data = {};
+        req_data[`port${port}`] = sw;
+
+        $.ajax({
+            url: `${API_HOST}/${API_VER}/controller/switch/${dev_id}`,
+            method: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            headers: {
+                "Authorization": "Bearer {nTqOrlSptF156qc26duTSQhmuWFVA2RCeLCRRaenTb2}",
+            },
+            dataType: "json",
+            data: req_data
+        }).done(resp_data => {
+            cb(resp_data);
         });
     }
+    function get_device_id_validity(dev_id, ssid, cb) {
+        let req_data = {};
+        req_data["device_id"] = dev_id;
+        req_data["ssid"] = ssid;
 
-    /*wet*/
-    function getSelectedOptions() {
-        var selectedOptions = [];
-        var divs = document.getElementsByClassName("main2");
-        for (var i = 0; i < divs.length; i++) {
-            if (buttons[i].classList.contains("select2")) {
-                selectedOptions.push(divs[i].value);
-            }
-        }
-
-    }
-    var divs = document.getElementsByClassName("main2");
-    for (var i = 0; i < divs.length; i++) {
-        divs[i].addEventListener("click", function () {
-            this.classList.toggle("select2");
-            var wetText = document.getElementById("wetswitch");
-            if (this.classList.contains("select2")) {
-                wetText.innerHTML = "ON";
-            } else {
-                wetText.innerHTML = "OFF";
-            }
+        $.ajax({
+            url: `${API_HOST}/${API_VER}/utility/deviceIdValidity`,
+            method: "GET",
+            data: req_data,
+            dataType: "json",
+        }).done(resp_data => {
+            cb(resp_data);
         });
     }
-    /*btn3 Select*/
-    function getSelectedOptions() {
-        var selectedOptions = [];
-        var divs = document.getElementsByClassName("btn3");
-        for (var i = 0; i < divs.length; i++) {
-            if (buttons[i].classList.contains("select3")) {
-                selectedOptions.push(divs[i].value);
+    window.onload = () => {
+        let QrkNV_id = "QrkNV";
+        let QrkNV_switch_port1 = $(`input[type=radio][name="${QrkNV_id}_switch_port1"]`);
+        let QrkNV_switch_port2 = $(`input[type=radio][name="${QrkNV_id}_switch_port2"]`);
+
+        let dev_switch = $(`input[type=radio][name="dev_switch"]`);
+        let input_dev_id = $("#dev_id");
+        let input_port = $("#port");
+        let input_resp_msg = $("#resp_msg");
+
+        let btn_validate = $("#btn_validate");
+        let input_valid_msg = $("#valid_msg");
+
+        QrkNV_switch_port1.on("change", function () {
+            set_switch(QrkNV_id, 1, $(this).val(), console.log);
+        });
+
+        QrkNV_switch_port2.on("change", function () {
+            set_switch(QrkNV_id, 2, $(this).val(), console.log);
+        });
+        function process_switch_response(resp) {
+            dev_switch.removeAttr(ATTR_DISABLED);
+            if (resp.status === undefined) { // Invalid response
+                return;
+            }
+
+            console.log(resp);
+            switch (resp.status) {
+                case 200:
+                    input_resp_msg.html("設定開關成功");
+                    break;
+
+                case 400:
+                    input_resp_msg.html("Bad Request");
+                    break;
+
+                case 408:
+                    input_resp_msg.html("裝置回應逾時");
+                    break;
+
+                case 500:
+                    input_resp_msg.html("API伺服器內部發生錯誤");
+                    break;
+
+                default:
             }
         }
-    }
-
-    var divs = document.getElementsByClassName("btn3");
-    for (var i = 0; i < divs.length; i++) {
-        divs[i].addEventListener("click", function () {
-            this.classList.toggle("select3");
-            var btn3Text = document.getElementById("btn3switch");
-            if (this.classList.contains("select3")) {
-                btn3Text.innerHTML = "ON";
-            } else {
-                btn3Text.innerHTML = "OFF";
+        dev_switch.on("change", function () {
+            if (input_dev_id.val() === "") {
+                input_resp_msg.html("Device ID不得為空白");
+                return;
             }
+
+            dev_switch.attr(ATTR_DISABLED, ATTR_DISABLED);
+            input_resp_msg.html("等待API回應結果");
+            set_switch(input_dev_id.val(), input_port.val(), $(this).val(), process_switch_response);
+        });
+
+        // verify ssid & device id
+        btn_validate.on("click", () => {
+            let v_dev_id = $("#valid_dev_id").val();
+            let v_ssid = $("#valid_ssid").val();
+
+            if (v_dev_id === "" || v_ssid === "") {
+                input_valid_msg.html("Device ID & SSID不可為空");
+                return;
+            }
+
+            input_valid_msg.html("等待API回應");
+            btn_validate.attr(ATTR_DISABLED, ATTR_DISABLED);
+            get_device_id_validity(v_dev_id, v_ssid, (resp) => {
+                switch (resp.status) {
+                    case 200:
+                        input_valid_msg.html(`驗證結果: ${resp.valid ? "" : "不"}一致`);
+                        break;
+
+                    case 400:
+                        input_valid_msg.html("Bad Request");
+                        break;
+
+                    case 500:
+                        input_valid_msg.html("Server Internal Error");
+                        break;
+                }
+
+                btn_validate.removeAttr(ATTR_DISABLED);
+            });
         });
     }
-     /*btn4 Select*/
-     function getSelectedOptions() {
-        var selectedOptions = [];
-        var divs = document.getElementsByClassName("btn4");
-        for (var i = 0; i < divs.length; i++) {
-            if (buttons[i].classList.contains("select4")) {
-                selectedOptions.push(divs[i].value);
-            }
-        }
-    }
+    let evt_src = new EventSource(`${API_HOST}/${API_VER}/notify`);
+    //開關//
+    const zoneButton = document.querySelectorAll('.zone-btn');
+    // 選取菜單元素
+    const zoneMenu = document.querySelectorAll('.zone-menu');
+    // 選取事件源元素
 
-    var divs = document.getElementsByClassName("btn4");
-    for (var i = 0; i < divs.length; i++) {
-        divs[i].addEventListener("click", function () {
-            this.classList.toggle("select4");
-            var btn4Text = document.getElementById("btn4switch");
-            if (this.classList.contains("select4")) {
-                btn4Text.innerHTML = "ON";
-            } else {
-                btn4Text.innerHTML = "OFF";
+    const stateElements = document.getElementById("state");
+
+    // 為每個按鈕添加事件監聽器
+    zoneButton.forEach(e => {
+        let self = e;
+
+        self.addEventListener('click', () => {
+            let zoneButton = self.id;
+
+            if (zoneButton == 'bt1') {
+                set_switch(input_dev_id.val(), input_port.val(), $(this).val(), process_switch_response);
+            } else if (zoneButton == 'bt2') {
+                set_switch(input_dev_id.val(), input_port.val(), $(this).val(), process_switch_response);
             }
+            zoneMenu.forEach(f => {
+                f.className = '';
+            });
+            self.className = 'select';
         });
-    }
-    /**滑動效果*/
-    let slideIndex = 1;
-    showSlides(slideIndex);
+    });
+    // 為事件源添加事件監聽器
+    evt_src.addEventListener("updated", (ev) => {
+        // 解析收到的數據
+        dev = JSON.parse(ev.data);
+        if (dev.ssid == "wf8011") {
+            if (dev.switch[0] == true) {
+                document.getElementById("state").textContent = "ON";
+                document.getElementById("bt1").classList.add("on");
+            } else {
+                document.getElementById("state").textContent = "OFF";
+                document.getElementById("bt1").classList.remove("on");
+            }
 
-    function plusSlides(n) {
-        showSlides(slideIndex += n);
-    }
-
-    function currentSlide(n) {
-        showSlides(slideIndex = n);
-    }
-
-    function showSlides(n) {
-        let i;
-        let slides = document.getElementsByClassName("mySlides");
-        let dots = document.getElementsByClassName("dot");
-        if (n > slides.length) { slideIndex = 1 }
-        if (n < 1) { slideIndex = slides.length }
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
+            if (dev.switch[1] == true) {
+                document.getElementById("state2").textContent = "ON";
+                document.getElementById("bt2").classList.add("on");
+            } else {
+                document.getElementById("state2").textContent = "OFF";
+                document.getElementById("bt2").classList.remove("on");
+            }
         }
-        for (i = 0; i < dots.length; i++) {
-            dots[i].className = dots[i].className.replace(" active", "");
-        }
-        slides[slideIndex - 1].style.display = "block";
 
-    }
+
+    });
+
+    // const Switch = document.getElementById("switch");
+
+    // Switch.addEventListener("change", function () {
+    //     // 當開關狀態改變時，執行某些動作
+    //     const newValue = this.checked;  // 取得新的開關狀態值
+
+    //     // 使用 fetch 方法傳送請求到伺服器端
+    //     fetch("/update-switch", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify({
+    //             device: "wjWXd",
+    //             switch: [true, newValue]
+    //         })
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log(data);
+    //         })
+    //         .catch(error => {
+    //             console.error(error);
+    //         });
+    // });
+    // app.post('/update-switch', function (req, res))
+
+    // // 自定義函數
+    // function set_switch(dev_id, port, value, callback) {
+    //     // 實現操作開關的功能
+    // }
+
+    // function process_switch_response(data) {
+    //     // 處理開關操作的回應數據
+    // }
+
+    //*跳出視窗*//
+    let btn = document.querySelector("#show");
+    let infoModal = document.querySelector("#infoModal");
+    btn.addEventListener("click", function () {
+        infoModal.showModal();
+    })
+
+    let close = document.querySelector("#close");
+    close.addEventListener("click", function () {
+        infoModal.close();
+    })
     console.log()
 </script>
 
