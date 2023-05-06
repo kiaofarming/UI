@@ -128,9 +128,9 @@ window.onload = () => {
   });
 
   function state_refresh(dev) {
-    const obj = document.querySelector("#submit");
+    const obj = document.querySelector("#deviceName");
 
-    if (dev.online != undefined) {
+    if (dev.online != undefined) {deviceName
       if (dev.online == true) {
         obj.style.backgroundColor = "#1C8686";
       } else {
