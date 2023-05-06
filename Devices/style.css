@@ -40,42 +40,12 @@ body {
 
 }
 
-.zone-btn.on {
-
-    background: #8FCDE4;
-    color: #fff;
-
-
-}
 
 .multi-select .state {
     font-size: 15px;
 }
 
 
-
-
-
-/*
-svg換色*/
-.svg {
-    width: 50px;
-    color: rgb(0, 0, 0);
-}
-
-.svg ::before,
-.svg::after {
-    color: rgb(255, 255, 255);
-}
-
-.my-edit-icon {
-    fill: #fff;
-    transition: fill 0.2s linear;
-}
-
-.my-edit-icon:hover {
-    fill: silver;
-}
 
 /*
 選單線
@@ -172,14 +142,12 @@ svg換色*/
 
 }
 
-/*
-隱藏核許框
-*/
+
 input#menu {
     display: none;
 }
 
-.add {
+.addDevice {
     border-style: dashed;
     border-color: #262626;
     border-radius: 20px;
@@ -187,7 +155,7 @@ input#menu {
     padding: 10px 15px;
 }
 
-.use {
+.useDevice {
     margin: 10px 0 10px 0;
     background: #1C8686;
     border-radius: 20px;
@@ -196,7 +164,7 @@ input#menu {
     color: #FFF
 }
 
-.unuse {
+.unuseDevice {
     margin: 10px 0 10px 0;
     background: #D3D3D3;
     border-radius: 20px;
@@ -214,7 +182,7 @@ input#menu {
     font-weight: bold;
 }
 
-#submit {
+#deviceName {
     display: block;
     margin: 10px auto 0;
     padding: 10px;
@@ -242,10 +210,7 @@ input#menu {
 
 }
 
-.SSID {
-    color: #A7A7A7;
 
-}
 
 .column {
     display: flex;
@@ -257,79 +222,11 @@ h3 {
     color: #1C8686;
 }
 
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    width: 200px;
-}
-
-table.box td {
-    vertical-align: middle;
-    text-align: center;
-}
 
 h4 {
     margin: 10px;
 }
 
-/*滑動相關*/
-
-/* Slideshow container */
-.slideshow-container {
-    width: 375px;
-    position: relative;
-    margin: auto;
-}
-
-/* Next & previous buttons */
-.prev,
-.next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    width: auto;
-    padding: 16px;
-    margin-top: -22px;
-    color: #000000;
-    font-weight: bold;
-    font-size: 18px;
-    transition: 0.6s ease;
-    border-radius: 0 3px 3px 0;
-    user-select: none;
-}
-
-/* Position the "next button" to the right */
-.next {
-    right: 0;
-    border-radius: 3px 0 0 3px;
-}
-
-
-/* Fading animation */
-.fade {
-    animation-name: fade;
-    animation-duration: 1.5s;
-}
-
-@keyframes fade {
-    from {
-        opacity: .4
-    }
-
-    to {
-        opacity: 1
-    }
-}
-
-/* On smaller screens, decrease text size */
-@media only screen and (max-width: 300px) {
-
-    .prev,
-    .next,
-    .text {
-        font-size: 11px
-    }
-}
 
 /* 跳出視窗 */
 dialog {
