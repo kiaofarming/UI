@@ -2,6 +2,22 @@ const API_HOST = "https://mqtt.kiaofarming.com";
 const PROXY_HOST = 'https://cors-anywhere.herokuapp.com/';
 const API_VER = "v1";
 
+let deviceName='調光LED燈';
+let addDevice='調光LED燈';
+let unuseDevice='未啟動';
+let switchState='開關狀態';
+let fan='風扇';
+let water='灑水';
+
+let objectName = {
+  裝置名稱: deviceName,
+  新增控制器: addDevice,
+  未啟動: unuseDevice,
+  開關狀態: switchState,
+  風扇:fan,
+  灑水:water,
+}
+console.log(objectName);
 
 function set_switch(dev_id, port, sw, cb) {
   let req_data = {};
@@ -58,7 +74,7 @@ function process_switch_response(resp) {
   }
 }
 window.onload = () => {
-  
+
   const ATTR_DISABLED = "disabled";
   const zoneState = document.querySelectorAll('#zone span');
   const zoneButton = document.querySelectorAll('#zone div');
@@ -84,7 +100,7 @@ window.onload = () => {
     let i = index;
 
     self.addEventListener('click', (ev) => {
-      let st = document.getElementById(zoneState[i].id).textContent;
+      let st = zoneState[i].textContent;
       let sw = 'off';
 
       if (st == 'OFF') {
@@ -100,7 +116,7 @@ window.onload = () => {
   // Server-Send Event example
 
 
-  let evt_src = new EventSource(`${API_HOST}/${API_VER}/notify`);
+  let evt_src = new EventSource(`${API_HOST}/${API_VER}/notify?device=wf8011,wjWXd`);
 
   evt_src.addEventListener("init", (ev) => { // Return all device data array
     devs = JSON.parse(ev.data);
@@ -130,7 +146,7 @@ window.onload = () => {
   function state_refresh(dev) {
     const obj = document.querySelector("#deviceName");
 
-    if (dev.online != undefined) {deviceName
+    if (dev.online != undefined) {
       if (dev.online == true) {
         obj.style.backgroundColor = "#1C8686";
       } else {
@@ -146,9 +162,10 @@ window.onload = () => {
           st = 'ON';
           color = '#8FCDE4';
         }
+        zoneState[i].textContent = st;
+        zoneButton[i].style.backgroundColor = color;
 
-        document.getElementById(zoneState[i].id).textContent = st;
-        document.getElementById(zoneButton[i].id).style.backgroundColor = color;
+
       }
     }
   }
