@@ -2,22 +2,15 @@ const API_HOST = "https://mqtt.kiaofarming.com";
 const PROXY_HOST = 'https://cors-anywhere.herokuapp.com/';
 const API_VER = "v1";
 
-let deviceName='調光LED燈';
-let addDevice='調光LED燈';
-let unuseDevice='未啟動';
-let switchState='開關狀態';
-let fan='風扇';
-let water='灑水';
 
-let objectName = {
-  裝置名稱: deviceName,
-  新增控制器: addDevice,
-  未啟動: unuseDevice,
-  開關狀態: switchState,
-  風扇:fan,
-  灑水:water,
+
+const objectName = {
+  deviceName: '調光LED燈',
+  switchName: ['風扇', '灑水'],
+  ssid: 'wf8011',
+  devID: 'wjWXd'
 }
-console.log(objectName);
+
 
 function set_switch(dev_id, port, sw, cb) {
   let req_data = {};
@@ -75,9 +68,33 @@ function process_switch_response(resp) {
 }
 window.onload = () => {
 
-  const ATTR_DISABLED = "disabled";
-  const zoneState = document.querySelectorAll('#zone span');
-  const zoneButton = document.querySelectorAll('#zone div');
+
+  let portNum = 2;
+
+  const zone = document.getElementById('zone');
+  const zoneButton = [];
+  const zoneState = [];
+
+  for (let i = 0; i < portNum; i++) {
+    zoneState.push(document.createElement('span'));
+    zoneState[i].setAttribute('id', 'state');
+    zoneState[i].setAttribute('style', 'text-align: center;');
+    zoneState[i].textContent = "OFF";
+  }
+
+  for (let i = 0; i < portNum; i++) {
+    zoneButton.push(document.createElement('div'));
+    zoneButton[i].setAttribute('name', 'dev_switch');
+    zoneButton[i].setAttribute('id', 'btn');
+    zoneButton[i].setAttribute('class', 'zone-btn');
+    zoneHead = document.createElement('h4');
+    zoneHead.textContent = '開關' + String(i + 1);
+
+    zoneButton[i].appendChild(zoneHead);
+
+    zoneButton[i].appendChild(zoneState[i]);
+    zone.appendChild(zoneButton[i]);
+  }
 
   //*跳出視窗*//
   let btn = document.querySelector("#show");
@@ -122,7 +139,7 @@ window.onload = () => {
     devs = JSON.parse(ev.data);
     devs.forEach((e, index) => {
       let dev = e;
-      if (dev.ssid == 'wf8011' && dev.device == 'wjWXd') {
+      if (dev.ssid == objectName['ssid'] && dev.device == objectName['devID']) {
         state_refresh(dev);
       }
     });
@@ -131,26 +148,26 @@ window.onload = () => {
   evt_src.addEventListener("updated", (ev) => { // Device send updated data
     dev = JSON.parse(ev.data);
 
-    if (dev.ssid == 'wf8011' && dev.device == 'wjWXd') {
+    if (dev.ssid == objectName['ssid'] && dev.device == objectName['devID']) {
       state_refresh(dev);
     }
   });
 
   evt_src.addEventListener("online", (ev) => { //Device online status changed 
     dev = JSON.parse(ev.data);
-    if (dev.ssid == 'wf8011' && dev.device == 'wjWXd') {
+    if (dev.ssid == objectName['ssid'] && dev.device == objectName['devID']) {
       state_refresh(dev);
     }
   });
 
   function state_refresh(dev) {
-    const obj = document.querySelector("#deviceName");
+
 
     if (dev.online != undefined) {
       if (dev.online == true) {
-        obj.style.backgroundColor = "#1C8686";
+        objectName['deviceName'].style.backgroundColor = "#1C8686";
       } else {
-        obj.style.backgroundColor = "#a0a0a0";
+        objectName['deviceName'].style.backgroundColor = "#a0a0a0";
       }
     }
 
@@ -169,4 +186,10 @@ window.onload = () => {
       }
     }
   }
+  const div = document.createElement('div');
+
+  div.textContent = objectName.deviceName;
+
+  const deviceFlex = document.querySelector('#deviceName');
+  deviceFlex.appendChild(div);
 }

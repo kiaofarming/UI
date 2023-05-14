@@ -26,59 +26,38 @@
           <li id="show" class="addDevice">+ 新增控制器</li>
           <li class="useDevice">調光LED燈</li>
           <li class="unuseDevice">未啟動</li>
-          </ul>
+        </ul>
       </div>
     </nav>
 
     <div class="header">
       <div class="column">
-        <h3 id="deviceName">調光LED燈</h3>
+        
 
       </div>
     </div>
-
-
-    <h3 style="text-align: left;margin-left: 60px;">開關狀態</h3>
-    <div id="zone" class="flex-container">
-
-      <div name="dev_switch" id="btn1" class="zone-btn">
-        <h4>風扇</h4>
-
-        <span id="state" style="text-align: center;">OFF</span>
-      </div>
-      <div name="dev_switch" id="btn2" class="zone-btn">
-
-        <h4>灑水</h4>
-
-        <span id="state2" style="text-align: center;">OFF</span>
-      </div>
-
+    <div>
+      <h3 id="deviceName"></h3>
+      <h3 style="text-align: left;margin-left: 60px;">開關狀態</h3>
+      <div id="zone" class="flex-container"></div>
     </div>
-    
-    
-    
   </div>
 
   <dialog id="infoModal">
-    <div>
+    <label>設備名稱 <input type="text" /></label>
+    <label>SSID <input type="text" /></label>
+    <label>DeviceID <input type="text" /></label>
+    <label>第1路開關名稱 <input type="text" /></label>
+    <br>
+    <label>第2路開關名稱 <input type="text" /></label>
 
-      <label>設備名稱 <input type="text" /></label>
-      <label>SSID <input type="text" /></label>
-      <label>DeviceID <input type="text" /></label>
-      <label>第1路開關名稱 <input type="text" /></label>
-      <br>
-      <label>第2路開關名稱 <input type="text" /></label>
-
-      <div id="valid_msg"></div>
+    <div id="valid_msg"></div>
 
 
-      <div class="buttons">
-        <div id="close" class="cancelBtn">關閉</div>
-      </div>
+    <div class="buttons">
+      <div id="close" class="cancelBtn">關閉</div>
+    </div>
   </dialog>
-
-
-
 
 </body>
 
