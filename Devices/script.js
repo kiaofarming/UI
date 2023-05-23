@@ -4,12 +4,17 @@ const API_VER = "v1";
 
 
 
-const objectName = {
-  deviceName: '調光LED燈',
-  switchName: ['風扇', '灑水'],
+var deviceList = [{
+  name: '調光LED燈',
+  tags: ['風扇', '灑水'],
   ssid: 'wf8011',
   devID: 'wjWXd'
-}
+}, {
+  name: 'Sean專用機',
+  tags: ['開關', '通知燈'],
+  ssid: 'wf8010',
+  devID: 'QrkNV'
+}]
 
 
 function set_switch(dev_id, port, sw, cb) {
@@ -66,14 +71,30 @@ function process_switch_response(resp) {
     default:
   }
 }
-window.onload = () => {
 
 
-  let portNum = 2;
+function viewDevice(key, devices, ports) {
+  let portNum = ports;
 
-  const zone = document.getElementById('zone');
+  const device = devices[key];
+
+  const devList = document.getElementById('devList');
+  const devName = document.createElement('h3');
+  const devText = document.createElement('h4');
+  const zone = document.createElement('div');
+  const br = document.createElement('br');
+  const hr = document.createElement('hr');
   const zoneButton = [];
   const zoneState = [];
+
+  zone.setAttribute('id', `zone${key}`);
+
+  devName.setAttribute('id', 'deviceName');
+  devName.innerHTML = device.name;
+  devText.setAttribute('style', 'text-align: left;margin-left: 60px;');
+  devText.innerHTML = '開關狀態';
+
+  zone.setAttribute('class', 'flex-container');
 
   for (let i = 0; i < portNum; i++) {
     zoneState.push(document.createElement('span'));
@@ -88,7 +109,7 @@ window.onload = () => {
     zoneButton[i].setAttribute('id', 'btn');
     zoneButton[i].setAttribute('class', 'zone-btn');
     zoneHead = document.createElement('h4');
-    zoneHead.textContent = '開關' + String(i + 1);
+    zoneHead.textContent = device.tags[i];
 
     zoneButton[i].appendChild(zoneHead);
 
@@ -96,21 +117,11 @@ window.onload = () => {
     zone.appendChild(zoneButton[i]);
   }
 
-  //*跳出視窗*//
-  let btn = document.querySelector("#show");
-  let infoModal = document.querySelector("#infoModal");
-  btn.addEventListener("click", function () {
-    infoModal.showModal();
-  });
-
-  let close = document.querySelector("#close");
-  close.addEventListener("click", function () {
-    infoModal.close();
-  });
-  console.log()
-  //**視窗 */
-
-
+  devList.appendChild(br);
+  devList.appendChild(devName);
+  devList.appendChild(devText);
+  devList.appendChild(zone);
+  devList.appendChild(hr);
 
   zoneButton.forEach((e, index) => {
     let self = e;
@@ -126,70 +137,92 @@ window.onload = () => {
         sw = 'off';
       }
 
-      set_switch('wjWXd', (i + 1), sw, process_switch_response);
+      set_switch(deviceList[key].devID, (i + 1), sw, process_switch_response);
     });
   });
+}
+
+function state_refresh(dev) {
+  for (let j = 0; j < deviceList.length; j++) {
+    if (dev.ssid == deviceList[j]['ssid'] && dev.device == deviceList[j]['devID']) {
+      const zoneState = document.querySelectorAll(`#zone${j} span`);
+      const zoneButton = document.querySelectorAll(`#zone${j} div`);
+      const devName = document.querySelectorAll(`#devList h3`);
+
+      if (dev.online != undefined) {
+        if (dev.online == true) {
+          devName[j].style.backgroundColor = "#1C8686";
+        } else {
+          devName[j].style.backgroundColor = "#a0a0a0";
+        }
+      }
+
+      if (dev.switch != undefined) {
+        for (let i = 0; i < dev.switch.length; i++) {
+          let st = 'OFF';
+          let color = '#E0E0E0';
+          if (dev.switch[i] == true) {
+            st = 'ON';
+            color = '#8FCDE4';
+          }
+          zoneState[i].textContent = st;
+          zoneButton[i].style.backgroundColor = color;
+        }
+      }
+      return;
+    }
+  }
+}
+
+window.onload = () => {
+
+
+  viewDevice(0, deviceList, 2);
+  viewDevice(1, deviceList, 2);
+
+  //*跳出視窗*//
+  let btn = document.querySelector("#show");
+  let infoModal = document.querySelector("#infoModal");
+  btn.addEventListener("click", function () {
+    console.log("Show button clicked"); 
+    infoModal.showModal();
+  });
+
+  let close = document.querySelector("#close");
+  close.addEventListener("click", function () {
+    infoModal.close();
+  });
+  //**視窗 */
+
+  //  const urlAPI = `${API_HOST}/${API_VER}/notify?device=${deviceList[0].ssid},${deviceList[0].devID};${deviceList[1].ssid},${deviceList[1].devID}`;
+  let urlAPI = `${API_HOST}/${API_VER}/notify?device=`;
+
+  deviceList.forEach((e, index) => {
+    let dev = e;
+    urlAPI = urlAPI.concat(`${dev.ssid},${dev.devID};`);
+  });
+
+  console.log(urlAPI);
+
+  let evt_src = new EventSource(urlAPI);
 
   // Server-Send Event example
-
-
-  let evt_src = new EventSource(`${API_HOST}/${API_VER}/notify?device=wf8011,wjWXd`);
-
-  evt_src.addEventListener("init", (ev) => { // Return all device data array
+  evt_src.addEventListener("init", (ev) => { // return all device data array
     devs = JSON.parse(ev.data);
     devs.forEach((e, index) => {
       let dev = e;
-      if (dev.ssid == objectName['ssid'] && dev.device == objectName['devID']) {
-        state_refresh(dev);
-      }
+      state_refresh(dev);
     });
   });
 
   evt_src.addEventListener("updated", (ev) => { // Device send updated data
     dev = JSON.parse(ev.data);
-
-    if (dev.ssid == objectName['ssid'] && dev.device == objectName['devID']) {
-      state_refresh(dev);
-    }
+    state_refresh(dev);
   });
 
   evt_src.addEventListener("online", (ev) => { //Device online status changed 
     dev = JSON.parse(ev.data);
-    if (dev.ssid == objectName['ssid'] && dev.device == objectName['devID']) {
-      state_refresh(dev);
-    }
+    state_refresh(dev);
   });
-
-  function state_refresh(dev) {
-
-
-    if (dev.online != undefined) {
-      if (dev.online == true) {
-        objectName['deviceName'].style.backgroundColor = "#1C8686";
-      } else {
-        objectName['deviceName'].style.backgroundColor = "#a0a0a0";
-      }
-    }
-
-    if (dev.switch != undefined) {
-      for (i = 0; i < dev.switch.length; i++) {
-        let st = 'OFF';
-        let color = '#E0E0E0';
-        if (dev.switch[i] == true) {
-          st = 'ON';
-          color = '#8FCDE4';
-        }
-        zoneState[i].textContent = st;
-        zoneButton[i].style.backgroundColor = color;
-
-
-      }
-    }
-  }
-  const div = document.createElement('div');
-
-  div.textContent = objectName.deviceName;
-
-  const deviceFlex = document.querySelector('#deviceName');
-  deviceFlex.appendChild(div);
 }
+

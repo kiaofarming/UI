@@ -30,33 +30,32 @@
       </div>
     </nav>
 
-    <div class="header">
-      <div class="column">
-        
-
-      </div>
-    </div>
-    <div>
-      <h3 id="deviceName"></h3>
-      <h3 style="text-align: left;margin-left: 60px;">開關狀態</h3>
-      <div id="zone" class="flex-container"></div>
-    </div>
+    <div id='devList'></div>
   </div>
 
+
   <dialog id="infoModal">
-    <label>設備名稱 <input type="text" /></label>
-    <label>SSID <input type="text" /></label>
-    <label>DeviceID <input type="text" /></label>
-    <label>第1路開關名稱 <input type="text" /></label>
-    <br>
-    <label>第2路開關名稱 <input type="text" /></label>
+    <form  id="myForm" class="wrap">
+      <label>設備名稱 <br>
+        <input  type="text" id="name" required="required" /></label>
+      <br>
+      <label>SSID <br>
+        <input  type="text" id="valid_ssid"required="required" /></label>
+      <br>
+      <label>Device ID <br> <input  type="text" id="valid_dev_id"required="required"/></label>
+      <br>
+      <label>第1路開關名稱 <br><input  type="text" id="tags" required="required" /></label>
+      <br>
+      <label>第2路開關名稱 <br><input  type="text" id="tags" required="required" /></label>
 
-    <div id="valid_msg"></div>
-
-
-    <div class="buttons">
-      <div id="close" class="cancelBtn">關閉</div>
-    </div>
+      <div id="valid_msg"></div>
+      <div class="buttons">
+        <button id="close" class="cancelBtn">關閉</button>
+        <!-- <div id="submit" class="submitBtn">送出</div> -->
+        <button type="submit"  class="submitBtn">送出</button>
+        
+      </div>
+    </form>
   </dialog>
 
 </body>
