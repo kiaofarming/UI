@@ -21,11 +21,9 @@
         <div class="menu"></div>
       </label>
 
-      <div class="menu-list">
+      <div id='devMenu' class="menu-list">
         <ul>
           <li id="show" class="addDevice">+ 新增控制器</li>
-          <li class="useDevice">調光LED燈</li>
-          <li class="unuseDevice">未啟動</li>
         </ul>
       </div>
     </nav>
@@ -40,20 +38,18 @@
         <input  type="text" id="name" required="required" /></label>
       <br>
       <label>SSID <br>
-        <input  type="text" id="valid_ssid"required="required" /></label>
+        <input  type="text" id="valid_ssid" required="required" /></label>
       <br>
-      <label>Device ID <br> <input  type="text" id="valid_dev_id"required="required"/></label>
+      <label>Device ID <br> <input type="text" id="valid_dev_id" required="required"/></label>
       <br>
-      <label>第1路開關名稱 <br><input  type="text" id="tags" required="required" /></label>
+      <label>第1路開關名稱 <br><input type="text" id="tags1" required="required"/></label>
       <br>
-      <label>第2路開關名稱 <br><input  type="text" id="tags" required="required" /></label>
+      <label>第2路開關名稱 <br><input type="text" id="tags2" required="required"/></label>
 
       <div id="valid_msg"></div>
       <div class="buttons">
         <button id="close" class="cancelBtn">關閉</button>
-        <!-- <div id="submit" class="submitBtn">送出</div> -->
-        <button type="submit"  class="submitBtn">送出</button>
-        
+        <button id='close' onclick="btnSubmit()" class="submitBtn">送出</button>
       </div>
     </form>
   </dialog>
