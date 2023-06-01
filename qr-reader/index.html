@@ -1,34 +1,46 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <title>Instascan</title>
-    <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
-    <!-- 載入instascan.min.js -->
+	<title>QR_Reader</title>
+	<meta charset="utf-8" />
+	<style type="text/css">
+		#reader {
+			display: block;
+			margin: 0 auto;
+			width: 80%;
+		}
+	</style>
+	<script src="html5-qrcode.min.js"></script>
 </head>
-
 <body>
-    <video id="preview" style="width=100%"></video>
-    <h3 id='code'>掃描中... </h3>
-    <script type="text/javascript">
-    let scanner = new Instascan.Scanner({
-        video: document.getElementById('preview')
-    });
+	<div style="width: 500px" id="reader"></div>
+	<h3 id='SSID'></h3>
+	<h3 id='DEVID'></h3>
+<script>
+	let url = '?openExternalBrowser=1';
+	window.history.pushState(null,null,url);
 
-    scanner.addListener('scan', function(content) {
-        console.log(content);
-	document.getElementById('code').innerHTML = content;
-    });
+	function onScanSuccess(decodedText, decodedResult) {
+	// Handle on success condition with the decoded text or result.
+		console.log(`Scan result: ${decodedText}`, decodedResult);
+		var SSID = decodedText.substring((decodedText.indexOf("#")+1),decodedText.indexOf("&"));
+		var DevID = decodedText.substring((decodedText.indexOf("&")+1));
 
-    Instascan.Camera.getCameras().then(function(cameras) {
-        if (cameras.length > 0) {
-	   console.log(cameras.length);
-           scanner.start(cameras[cameras.length-1]);
-        } else {
-            console.error('No cameras found.');
-        }
-    }).catch(function(e) {
-        console.error(e);
-    });
-    </script>
+		if(SSID != "" && DevID != "") {
+			document.getElementById('SSID').innerHTML = `SSID : ${SSID}`;
+			document.getElementById('DEVID').innerHTML = `DevID : ${DevID}`;
+		}
+	}
+
+	function onScanError(errorMessage) {
+	// handle on error condition, with error message
+	}
+
+	var html5QrcodeScanner = new Html5QrcodeScanner(
+		"reader", { fps: 10, qrbox: 250 });
+
+	html5QrcodeScanner.render(onScanSuccess, onScanError);
+	var scanImg = document.getElementById('html5-qrcode-anchor-scan-type-change');
+	scanImg.innerHTML = "";
+</script>
 </body>
 </html>
