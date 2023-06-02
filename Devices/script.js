@@ -20,6 +20,32 @@ window.history.pushState(null, null, url);
 
 var deviceList = new Array();
 
+function reloadWindow(){
+      const devList = document.getElementById('devList');
+      const devMenu = document.getElementById('devMag');
+
+      devList.replaceChildren();
+      devMenu.replaceChildren();
+
+      listenDevice();
+      showDeviceMenu();
+}
+
+function download(filename, data) {
+    const blob = new Blob([data], {type: 'text/csv'});
+    if(window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveBlob(blob, filename);
+    }
+    else{
+        const elem = window.document.createElement('a');
+        elem.href = window.URL.createObjectURL(blob);
+        elem.download = filename;
+        document.body.appendChild(elem);
+        elem.click();
+        document.body.removeChild(elem);
+    }
+}
+
 function set_switch(dev_id, port, sw, cb) {
   let req_data = {};
   req_data[`port${port}`] = sw;
@@ -78,8 +104,8 @@ function process_switch_response(resp) {
 function viewDevice(key, devices, ports) {
   let portNum = ports;
 
-  const zoneId = document.getElementById(`zone${key}`);
-  if (zoneId != null) {
+  const blockId = document.getElementById(`block${key}`);
+  if (blockId != null) {
     return;
   }
 
@@ -88,54 +114,63 @@ function viewDevice(key, devices, ports) {
   const devList = document.getElementById('devList');
   const devName = document.createElement('h3');
   const devText = document.createElement('h4');
-  const zone = document.createElement('div');
+  const block = document.createElement('div');
   const br = document.createElement('br');
   const hr = document.createElement('hr');
-  const zoneButton = [];
-  const zoneState = [];
+  const blockButton = [];
+  const blockState = [];
 
-  zone.setAttribute('id', `zone${key}`);
+  block.setAttribute('id', `block${key}`);
 
   devName.setAttribute('id', 'deviceName');
   devName.innerHTML = device.name;
   devText.setAttribute('style', 'text-align: left;margin-left: 60px;');
   devText.innerHTML = '開關狀態';
 
-  zone.setAttribute('class', 'flex-container');
+  block.setAttribute('class', 'flex-container');
 
   for (let i = 0; i < portNum; i++) {
-    zoneState.push(document.createElement('span'));
-    zoneState[i].setAttribute('id', 'state');
-    zoneState[i].setAttribute('style', 'text-align: center;');
-    zoneState[i].textContent = "OFF";
+    blockState.push(document.createElement('span'));
+    blockState[i].setAttribute('id', 'state');
+    blockState[i].setAttribute('style', 'text-align: center;');
+    blockState[i].textContent = "OFF";
   }
 
   for (let i = 0; i < portNum; i++) {
-    zoneButton.push(document.createElement('div'));
-    zoneButton[i].setAttribute('name', 'dev_switch');
-    zoneButton[i].setAttribute('id', 'btn');
-    zoneButton[i].setAttribute('class', 'zone-btn');
-    zoneHead = document.createElement('h4');
-    zoneHead.textContent = device.tags[i];
+    blockButton.push(document.createElement('div'));
+    blockButton[i].setAttribute('name', 'dev_switch');
+    blockButton[i].setAttribute('id', 'btn');
+    blockButton[i].setAttribute('class', 'block-btn');
+    blockButton[i].setAttribute('style', 'width:25%');
+    blockHead = document.createElement('h4');
+    blockHead.textContent = device.tags[i].name;
 
-    zoneButton[i].appendChild(zoneHead);
+    blockButton[i].appendChild(blockHead);
 
-    zoneButton[i].appendChild(zoneState[i]);
-    zone.appendChild(zoneButton[i]);
+    blockButton[i].appendChild(blockState[i]);
+/*
+    if(device.enable[i] == true) {
+	blockButton[i].style.visibility='visible';
+    } else {
+	blockButton[i].style.visibility='hidden';
+    }
+*/
+    block.appendChild(blockButton[i]);
   }
 
   devList.appendChild(br);
   devList.appendChild(devName);
-  devList.appendChild(devText);
-  devList.appendChild(zone);
+//  devList.appendChild(devText);
+  devList.appendChild(br);
+  devList.appendChild(block);
   devList.appendChild(hr);
 
-  zoneButton.forEach((e, index) => {
+  blockButton.forEach((e, index) => {
     let self = e;
     let i = index;
 
     self.addEventListener('click', (ev) => {
-      let st = zoneState[i].textContent;
+      let st = blockState[i].textContent;
       let sw = 'off';
 
       if (st == 'OFF') {
@@ -153,14 +188,33 @@ async function state_refresh(dev, key) {
 
   await viewDevice(key, deviceList, 2);
 
-  const zoneState = document.querySelectorAll(`#zone${key} span`);
-  const zoneButton = document.querySelectorAll(`#zone${key} div`);
+  const device = deviceList[key];
+
+  const blockState = document.querySelectorAll(`#block${key} span`);
+  const blockButton = document.querySelectorAll(`#block${key} div`);
   const devName = document.querySelectorAll(`#devList h3`);
+  const devBlock = document.getElementById(`block${key}`);
+
+  console.log(dev);
 
   if (dev.online != undefined) {
     if (dev.online == true) {
+/*
+      for (let i = 0; i < dev.switch.length; i++) {
+       	blockState[i].style.color = '#202020';
+       	blockButton[i].style.color = '#202020';
+      }
+      devBlock.disabled = true;
+*/
       devName[key].style.backgroundColor = "#1C8686";
     } else {
+/*
+      for (let i = 0; i < dev.switch.length; i++) {
+        blockState[i].style.color = '#909090';
+        blockButton[i].style.color = '#909090';
+      }
+      devBlock.disabled = false;
+*/
       devName[key].style.backgroundColor = "#a0a0a0";
     }
   }
@@ -173,26 +227,33 @@ async function state_refresh(dev, key) {
         st = 'ON';
         color = '#8FCDE4';
       }
-      zoneState[i].textContent = st;
-      zoneButton[i].style.backgroundColor = color;
+      
+      blockState[i].textContent = st;
+      blockButton[i].style.backgroundColor = color;
     }
   }
 }
 
 function btnSubmit() {
-
   var newDevice = {
     name: document.getElementById('name').value,
-    tags: [document.getElementById('tags1').value, document.getElementById('tags2').value],
+    tags: [{
+	  enable: document.getElementById('enable1').checked,
+	  name: document.getElementById('tags1').value
+	},{
+	  enable: document.getElementById('enable2').checked,
+	  name: document.getElementById('tags2').value
+	}],
     ssid: document.getElementById('valid_ssid').value,
     devID: document.getElementById('valid_dev_id').value
   };
+
+  console.log(document.getElementById('enable1'),newDevice);
 
   if (newDevice.name === "" || newDevice.ssid === "" || newDevice.devID === "") {
     return;
   }
 
-  console.log(newDevice);
   deviceList.push(newDevice);
 
   var strJSON = JSON.stringify(deviceList);
@@ -200,7 +261,8 @@ function btnSubmit() {
 }
 
 function showDeviceMenu() {
-  const devMenu = document.getElementById('devMenu');
+  const devMenu = document.getElementById('devMag');
+  
   var devItem = null;
 
   for (let i = 0; i < deviceList.length; i++) {
@@ -214,6 +276,7 @@ function showDeviceMenu() {
     devItem.setAttribute('class', 'useDevice');
     devItem.innerHTML = deviceList[i].name;
     deleteItem.setAttribute('class', 'delete');
+    deleteItem.setAttribute('id', `${i}`);
     deleteItem.textContent = '—';
 
     // 將元素添加到容器中
@@ -221,19 +284,20 @@ function showDeviceMenu() {
     buttonContainer.appendChild(deleteItem);
 
     // 將容器添加到文檔中的某個元素中
-    const parentElement = document.querySelector('#devMenu'); // 替換為實際的父元素選擇器
+    const parentElement = document.querySelector('#devMag'); // 替換為實際的父元素選擇器
     parentElement.appendChild(buttonContainer);
 
     deleteItem.addEventListener('click', () => {
-      buttonContainer.remove(); // 移除包含 deleteItem 和 devItem 的 buttonContainer
+      console.log(deleteItem.id);
+      deviceList.splice(deleteItem.id,1);
+      
+      var strJSON = JSON.stringify(deviceList);
+      localStorage.setItem('myList', strJSON);
+      reloadWindow();
+//      buttonContainer.remove(); // 移除包含 deleteItem 和 devItem 的 buttonContainer
     });
-
   }
-  
 }
-
-
-
 
 window.onload = () => {
   var strJSON = localStorage.getItem('myList');
@@ -248,11 +312,36 @@ window.onload = () => {
   let btn = document.querySelector("#show");
   let infoModal = document.querySelector("#infoModal");
   var infoItems = document.querySelectorAll("#infoModal input");
+  let downloadBtn = document.getElementById('download');
+  let uploadBtn = document.getElementById('upload');
+
+  uploadBtn.addEventListener("change",function (){
+//  uploadBtn.addEventListener("click",function (){
+    var files = this.files;
+    if (files.length === 0) {
+        console.log('No file is selected');
+        return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(event) {
+	strJSON = event.target.result;
+	localStorage.setItem('myList', strJSON);
+	deviceList = JSON.parse(strJSON);
+	reloadWindow();
+    };
+    reader.readAsText(files[0]);
+  });
+
+  downloadBtn.addEventListener("click",function (){
+    download("deviceList.json",JSON.stringify(deviceList)); 
+  });
 
   btn.addEventListener("click", function () {
-    console.log("Show button clicked");
     for (let i = 0; i < infoItems.length; i++) {
-      infoItems[i].setAttribute("required", "required");
+      if(infoItems[i].name != 'enable') {
+        infoItems[i].setAttribute("required", "required");
+      }
     }
     infoModal.showModal();
   });
@@ -268,8 +357,17 @@ window.onload = () => {
   if (deviceList.length <= 0)
     return;
 
+  listenDevice();
+}
+
+let evt_src = null;
+
+function listenDevice() {
   //  const urlAPI = `${API_HOST}/${API_VER}/notify?device=${deviceList[0].ssid},${deviceList[0].devID};${deviceList[1].ssid},${deviceList[1].devID}`;
   let urlAPI = `${API_HOST}/${API_VER}/notify?device=`;
+
+  if(deviceList.length <= 0)
+	return;
 
   deviceList.forEach((e, index) => {
     let dev = e;
@@ -278,7 +376,7 @@ window.onload = () => {
 
   console.log(urlAPI);
 
-  let evt_src = new EventSource(urlAPI);
+  evt_src = new EventSource(urlAPI);
 
   // Server-Send Event example
   evt_src.addEventListener("init", (ev) => { // return all device data array
@@ -311,6 +409,4 @@ window.onload = () => {
       }
     }
   });
-
-
 }

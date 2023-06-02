@@ -12,6 +12,7 @@ body {
 
 }
 
+
 .header {
     text-align: center;
     position: relative;
@@ -21,13 +22,28 @@ body {
     align-items: center;
 }
 
-
 /*開關控制-按鈕*/
 
+.zone {
+    position: relative;
+    text-align: right;
+    margin-right: 20px;
+    font-size: 20px;
+    color: #1C8686;
+    top:25px;
+}
 
+.zoneList {
+    padding: 1px;
+    font-size: 20px;
+    width: 120px;
+    border: 3px #1C8686 solid;
+    border-radius: 10px;
+    background-color: white;
+    color: #1C8686;
+}
 
-.zone-btn {
-
+.block-btn {
     display: inline-block;
     width: auto;
     height: auto;
@@ -41,7 +57,6 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
 
 }
-
 
 .multi-select .state {
     font-size: 15px;
@@ -113,7 +128,7 @@ body {
 選單開合
 */
 #menu:checked~.menu-list {
-    width: 300px;
+    width: 375px;
     height: 73vh;
 }
 
@@ -134,28 +149,18 @@ body {
 */
 .menu-list ul {
     list-style: none;
-    margin-left: 45px;
+    margin-left: 15px;
     padding: 0;
 }
 
 .menu-list ul>li {
     display: block;
     width: 180px;
-
 }
 
 
 input#menu {
     display: none;
-}
-
-.addDevice {
-    border-style: dashed;
-    border-color: #262626;
-    border-radius: 20px;
-    text-align: center;
-    padding: 10px 15px;
-
 }
 
 .useDevice {
@@ -230,11 +235,7 @@ input#menu {
     display: flex;
     justify-content: center;
     align-items: center;
-
-
 }
-
-
 
 .column {
     display: flex;
@@ -310,25 +311,36 @@ hr {
     border: 0.5px dashed #1C8686;
 }
 
-input {
-    height: 20px;
-
+#devList {
+    top:60px;
+    text-align: center;
+    position: relative;
 }
 
 .wrap {
     margin: 0 35px;
 }
 
-#less,#add {
-    margin-right: 10px;
-    width: 50px;
-    font-size: 20px;
-    margin-top: 5px;
-    padding: 10px;
-    border: 3px #1C8686 solid;
-    background-color: white;
-    border-radius: 10px;
-    color: #1C8686;
+input[type="file"] {
+    position: absolute;
+    width: -1px;
+    height: 1px;
+    padding: 0;
+    margin: -5px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+.addDevice ,.custom-file-upload ,#download {
+    display: inline-block;
+    border-style: dashed;
+    border-color: #262626;
+    border-radius: 20px;
+    text-align: center;
+    padding: 10px 15px;
+    height:22px;
+    width:60px;
 }
 
 .button-container {
