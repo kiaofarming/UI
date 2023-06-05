@@ -158,12 +158,13 @@ function viewDevice(key, devices, ports) {
     block.appendChild(blockButton[i]);
   }
 
-  devList.appendChild(br);
-  devList.appendChild(devName);
+//  devList.appendChild(br);
+//  devList.appendChild(hr);
+//  devList.appendChild(devName);
 //  devList.appendChild(devText);
-  devList.appendChild(br);
+//  devList.appendChild(br);
   devList.appendChild(block);
-  devList.appendChild(hr);
+//  devList.appendChild(hr);
 
   blockButton.forEach((e, index) => {
     let self = e;
@@ -199,23 +200,25 @@ async function state_refresh(dev, key) {
 
   if (dev.online != undefined) {
     if (dev.online == true) {
-/*
+
       for (let i = 0; i < dev.switch.length; i++) {
        	blockState[i].style.color = '#202020';
        	blockButton[i].style.color = '#202020';
       }
       devBlock.disabled = true;
-*/
-      devName[key].style.backgroundColor = "#1C8686";
+
+//      devName[key].style.backgroundColor = "#1C8686";
+
     } else {
-/*
+
       for (let i = 0; i < dev.switch.length; i++) {
         blockState[i].style.color = '#909090';
         blockButton[i].style.color = '#909090';
       }
       devBlock.disabled = false;
-*/
-      devName[key].style.backgroundColor = "#a0a0a0";
+
+//      devName[key].style.backgroundColor = "#a0a0a0";
+
     }
   }
 

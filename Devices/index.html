@@ -7,7 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"
     integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+  <script type="text/javascript" src="app.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -39,7 +40,11 @@
         <option>院子</option>
       </select>
     </div>
-    <div id='devList'></div>
+    <div id='devChart' style="width=350px;">
+	<canvas id="tempChart"></canvas>
+    </div>
+    <div id='devList'>
+    </div>
   </div>
 
   <dialog id="infoModal">
@@ -71,6 +76,102 @@
     </form>
   </dialog>
 
+<script>
+  const ctx = document.getElementById('tempChart');
+
+    var Labels =  ['ta1150','ta1223','ta1435','ta1567','ta1126','ta1622'];
+    var Temps = [40.78,38.54,38.44,44.81,39.03,31.76 ];
+    var Humis = [65.94,54.87,52.01,47.30,50.60,40.41];
+    var Mosis = [15.94,24.87,32.01,17.30,20.60,10.41];
+    var Luxs = [10.15,614.89,1563.57,174.31,787.08,1046.59,1];
+    var reLuxs = [];
+
+    for(let i=0;i<Luxs.length;i++) {
+	let maxLux = Math.max.apply(null, Luxs);;
+	reLuxs.push((Luxs[i] / maxLux) * 100);
+    }
+
+    console.log(reLuxs);
+
+    var tempColor = "rgb(255, 99, 132)";
+    var HumiColor = "rgb(132,175,243)";
+    var LuxColor = "rgb(254, 162, 35)";
+    var MosiColor = "rgb(124, 132, 15)";	
+
+const tData = {
+  labels: Labels,
+  datasets: [{
+    label: '溫度(°C)',
+    data: Temps,
+    fill: false,
+    backgroundColor: tempColor,
+    borderColor: tempColor,
+    pointBackgroundColor: tempColor,
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: tempColor
+  },{
+    label: '濕度(%)',
+    data: Humis,
+    fill: false,
+    backgroundColor: HumiColor,
+    borderColor: HumiColor,
+    pointBackgroundColor: HumiColor,
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: HumiColor
+  }, {
+    label: '土濕(%)',
+    data: Mosis,
+    fill: false, 
+    backgroundColor: MosiColor,
+    borderColor: MosiColor,
+    pointBackgroundColor: MosiColor,
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: MosiColor
+ }, {
+    label: '光度(Par)',
+    data: reLuxs,
+    fill: false, 
+    backgroundColor: LuxColor,
+    borderColor: LuxColor,
+    pointBackgroundColor: LuxColor,
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: LuxColor
+   }]
+};
+
+  const tempConfig = {
+    type: 'radar',
+    data: tData,
+    options: {
+      scales: {
+          r: {
+		max: 100,
+		min: 0,
+              angleLines: {
+                  display: true
+              },
+            ticks: {
+//                stepSize: 10, 
+            },
+            suggestedMin: 0,
+            suggestedMax: 100,
+          }
+      },
+      elements: {
+        line: {
+          borderWidth: 3
+        }
+      }
+    },
+  };
+
+  new Chart(ctx, tempConfig);
+
+</script>
 
 </body>
 
