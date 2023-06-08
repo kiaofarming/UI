@@ -181,7 +181,7 @@ function viewDevice(key, devices, ports) {
   devList.appendChild(devText);
   devList.appendChild(block);
 */
-  if (0) {
+  if (1) {
     devList.appendChild(hr);
     devList.appendChild(devName);
     devList.appendChild(br);
