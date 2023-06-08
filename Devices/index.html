@@ -2,89 +2,83 @@
 <html>
 
 <head>
-  <title>KiaoFarming API </title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"
-    integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
-  <script type="text/javascript" src="app.js"></script>
-  <link rel="stylesheet" href="style.css">
+    <title>KiaoFarming API </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="container">
-    <nav class="nav-box">
-      <input type="checkbox" id="menu">
-      <label for="menu" class="line">
-        <div class="menu"></div>
-      </label>
-
-      <div id='devMenu' class="menu-list">
-        <div class="zoneEditer">
-          <label>區域：</label>
-          <select class="editList">
-            <option>陽台</option>
-            <option>天台</option>
-            <option>院子</option>
-            <option>+新增</option>
-          </select>
+    <div class="container">
+        <nav class="nav-box">
+            <input type="checkbox" id="menu">
+            <label for="menu" class="line">
+                <div class="menu"></div>
+            </label>
+            <div id='devMenu' class="menu-list">
+                <div class="zoneEditer">
+                    <label>區域：</label>
+                    <select class="editList">
+                        <option>陽台</option>
+                        <option>天台</option>
+                        <option>院子</option>
+                        <option>+新增</option>
+                    </select>
+                </div>
+                <div style="margin-top:15px;text-align: center;">
+                    <label id="show" class="addDevice">+ 新增</label>
+                    <label for="upload" class="custom-file-upload">
+                        <i class="fa fa-cloud-upload"></i> 載入
+                    </label>
+                    <input type='file' id="upload" />
+                    <label id="download">下載</label>
+                </div>
+                <ul id="devMag"></ul>
+            </div>
+        </nav>
+        <div class="zone">
+            <label>區域：</label>
+            <select class="zoneList">
+                <option>陽台</option>
+                <option>天台</option>
+                <option>院子</option>
+            </select>
         </div>
-
-        <div style="margin-top:15px;text-align: center;">
-          <label id="show" class="addDevice">+ 新增</label>
-          <label for="upload" class="custom-file-upload">
-            <i class="fa fa-cloud-upload"></i> 載入
-          </label>
-          <input type='file' id="upload"/>
-          <label id="download">下載</label>
+        <div id='devChart' style="width=350px;">
+            <canvas id="tempChart"></canvas>
         </div>
-	<ul id="devMag"></ul>
-      </div>
-    </nav>
-    <div class="zone">
-      <label>區域：</label>
-      <select class="zoneList">
-        <option>陽台</option>
-        <option>天台</option>
-        <option>院子</option>
-      </select>
+        <div id='devList'>
+        </div>
     </div>
-    <div id='devChart' style="width=350px;">
-	<canvas id="tempChart"></canvas>
-    </div>
-    <div id='devList'>
-    </div>
-  </div>
-
-  <dialog id="infoModal">
-    <form id="myForm" class="wrap">
-      <label>設備名稱 <br>
-        <input type="text" id="name" required="required" /></label>
-      <br>
-      <label>SSID <br>
-        <input type="text" id="valid_ssid" required="required" /></label>
-      <br>
-      <label>Device ID <br> <input type="text" id="valid_dev_id" required="required" /></label>
-      <br>
-      <label>第1路開關名稱 <br>
-	<input type="checkbox" id="enable1" name="enable" value="1" checked />
-	<input type="text" id="tags1" required="required" />
-      </label>
-      
-      <br>
-      <label>第2路開關名稱 <br>
-	<input type="checkbox" id="enable2" name="enable" value="2" checked />
-	<input type="text" id="tags2" required="required" />
-      </label>
-
-      <div id="valid_msg"></div>
-      <div class="buttons">
-        <button id="close" type='button' class="cancelBtn">關閉</button>
-        <button id='close' type='submit' onclick="btnSubmit()" class="submitBtn">送出</button>
-      </div>
-    </form>
-  </dialog>
+    <dialog id="infoModal">
+        <form id="myForm" class="wrap">
+            <label>設備名稱 <br>
+                <input type="text" id="name" required="required" /></label>
+            <br>
+            <label>SSID <br>
+                <input type="text" id="valid_ssid" required="required" /></label>
+            <br>
+            <label>Device ID <br> <input type="text" id="valid_dev_id" required="required" /></label>
+            <br>
+            <label>第1路開關名稱 <br>
+                <input type="checkbox" id="enable1" name="enable" value="1" checked />
+                <input type="text" id="tags1" required="required" />
+            </label>
+            <br>
+            <label>第2路開關名稱 <br>
+                <input type="checkbox" id="enable2" name="enable" value="2" checked />
+                <input type="text" id="tags2" required="required" />
+            </label>
+            <div id="valid_msg"></div>
+            <div class="buttons">
+                <button id="close" type='button' class="cancelBtn">關閉</button>
+                <button id='close' type='submit' onclick="btnSubmit()" class="submitBtn">送出</button>
+            </div>
+        </form>
+    </dialog>
 </body>
 
 </html>

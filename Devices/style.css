@@ -22,20 +22,22 @@ body {
 
 /*開關控制-按鈕*/
 
-.zone,.zoneEditer {
+.zone,
+.zoneEditer {
     position: relative;
     text-align: right;
     margin-right: 20px;
     font-size: 20px;
     color: #1C8686;
-    top:25px;
+    top: 25px;
 }
 
 .zoneEditer {
-    top:0px;
+    top: 0px;
 }
 
-.zoneList,.editList {
+.zoneList,
+.editList {
     padding: 1px;
     font-size: 20px;
     width: 120px;
@@ -306,7 +308,8 @@ hr {
     border: 0.5px dashed #1C8686;
 }
 
-#devList, #devChart {
+#devList,
+#devChart {
     top: 30px;
     text-align: center;
     position: relative;
@@ -323,19 +326,21 @@ input[type="file"] {
     padding: 0;
     margin: -5px;
     overflow: hidden;
-    clip: rect(0,0,0,0);
+    clip: rect(0, 0, 0, 0);
     border: 0;
 }
 
-.addDevice ,.custom-file-upload ,#download {
+.addDevice,
+.custom-file-upload,
+#download {
     display: inline-block;
     border-style: dashed;
     border-color: #262626;
     border-radius: 20px;
     text-align: center;
     padding: 10px 15px;
-    height:22px;
-    width:60px;
+    height: 22px;
+    width: 60px;
 }
 
 .button-container {
