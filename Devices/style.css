@@ -22,7 +22,7 @@ body {
 
 /*開關控制-按鈕*/
 
-.zone {
+.zone,.zoneEditer {
     position: relative;
     text-align: right;
     margin-right: 20px;
@@ -31,7 +31,11 @@ body {
     top:25px;
 }
 
-.zoneList {
+.zoneEditer {
+    top:0px;
+}
+
+.zoneList,.editList {
     padding: 1px;
     font-size: 20px;
     width: 120px;

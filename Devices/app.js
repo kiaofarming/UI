@@ -2,16 +2,32 @@ const API_HOST = "https://mqtt.kiaofarming.com";
 const PROXY_HOST = 'https://cors-anywhere.herokuapp.com/';
 const API_VER = "v1";
 /*
-var deviceList = [{
-  name: '調光LED燈',
-  tags: ['風扇', '灑水'],
-  ssid: 'wf8011',
-  devID: 'wjWXd'
+var zone = [{
+  name : '陽台',
+  deviceList : [{
+    name: '調光LED燈',
+    tags: ['風扇', '灑水'],
+    ssid: 'wf8011',
+    devID: 'wjWXd'
+  },{
+    name: 'Sean專用機',
+    tags: ['關關', '通知燈'],
+    ssid: 'wf8010',
+    devID: 'QrkNV'
+  }]
 },{
-  name: 'Sean專用機',
-  tags: ['關關', '通知燈'],
-  ssid: 'wf8010',
-  devID: 'QrkNV'
+  name : '天台',
+  deviceList : [{
+    name: '調光LED燈',
+    tags: ['風扇', '灑水'],
+    ssid: 'wf8011',
+    devID: 'wjWXd'
+  },{
+    name: 'Sean專用機',
+    tags: ['關關', '通知燈'],
+    ssid: 'wf8010',
+    devID: 'QrkNV'
+  }]
 }];
 */
 
@@ -158,13 +174,21 @@ function viewDevice(key, devices, ports) {
     block.appendChild(blockButton[i]);
   }
 
-//  devList.appendChild(br);
-//  devList.appendChild(hr);
-//  devList.appendChild(devName);
-//  devList.appendChild(devText);
-//  devList.appendChild(br);
+/*
+  devList.appendChild(br);
+  devList.appendChild(hr);
+  devList.appendChild(devName);
+  devList.appendChild(devText);
   devList.appendChild(block);
-//  devList.appendChild(hr);
+*/
+  if (0) {
+    devList.appendChild(hr);
+    devList.appendChild(devName);
+    devList.appendChild(br);
+    devList.appendChild(block);
+  } else {
+    devList.appendChild(block);
+  }
 
   blockButton.forEach((e, index) => {
     let self = e;
@@ -186,39 +210,85 @@ function viewDevice(key, devices, ports) {
 }
 
 async function state_refresh(dev, key) {
+  if(dev.model == "M101") {
+	let id = ssid.indexOf(dev.ssid);
 
-  await viewDevice(key, deviceList, 2);
+	if( id<0 )
+		return;
 
-  const device = deviceList[key];
+	if(dev.temp != undefined) {
+		Temps [id] = dev.temp;
+	} else {
+		Temps [id] = 0;
+	}
 
-  const blockState = document.querySelectorAll(`#block${key} span`);
-  const blockButton = document.querySelectorAll(`#block${key} div`);
-  const devName = document.querySelectorAll(`#devList h3`);
-  const devBlock = document.getElementById(`block${key}`);
+	if(dev.humi != undefined) {
+		Humis[id] = dev.humi;
+	} else {
+		Humis[id] = 0;
+	}
+ 
+	if(dev.moisture != undefined) {
+		Mois[id] = (1023-dev.moisture)*100/1023;
+	} else {
+		Mois[id] =0;
+	}
 
-  console.log(dev);
+	if(dev.light != undefined) {
+		Luxs[id] = dev.light;
+	} else {
+		Luxs[id] = 0;
+	}
+		
+	let maxLux = Math.max.apply(null, Luxs);;
+	reLuxs[id] = ((Luxs[id] / maxLux) * 100);
 
-  if (dev.online != undefined) {
-    if (dev.online == true) {
+	if(dev.timestamp != undefined) {
+		timestamps[id] = dev.timestamp;
+	} else {
+		timestamps[id] = 0;
+	}
 
-      for (let i = 0; i < dev.switch.length; i++) {
-       	blockState[i].style.color = '#202020';
-       	blockButton[i].style.color = '#202020';
+	myChart.update('active');
+  } else if( dev.model == "M207") {
+    let id = ssid.indexOf(dev.ssid);
+    if(id>=0) {
+      ssid.splice(id,1);
+      Labels.splice(id,1);
+    }
+
+    await viewDevice(key, deviceList, 2);
+
+    const device = deviceList[key];
+
+    const blockState = document.querySelectorAll(`#block${key} span`);
+    const blockButton = document.querySelectorAll(`#block${key} div`);
+    const devName = document.querySelectorAll(`#devList h3`);
+    const devBlock = document.getElementById(`block${key}`);
+
+    if (dev.online != undefined) {
+      if (dev.online == true) {
+        console.log(devName,dev);
+        if(devName.length == 0) {
+          for (let i = 0; i < dev.switch.length; i++) {
+             blockState[i].style.color = '#202020';
+             blockButton[i].style.color = '#202020';
+          }
+          devBlock.disabled = true;
+        } else {
+          devName[key].style.backgroundColor = "#1C8686";
+        }
+      } else {
+        console.log(devName,dev);
+        if(devName.length == 0) {
+          for (let i = 0; i < dev.switch.length; i++) {
+            blockState[i].style.color = '#909090';
+            blockButton[i].style.color = '#909090';
+          }
+          devBlock.disabled = false;
+        } else {
+          devName[key].style.backgroundColor = "#a0a0a0";
       }
-      devBlock.disabled = true;
-
-//      devName[key].style.backgroundColor = "#1C8686";
-
-    } else {
-
-      for (let i = 0; i < dev.switch.length; i++) {
-        blockState[i].style.color = '#909090';
-        blockButton[i].style.color = '#909090';
-      }
-      devBlock.disabled = false;
-
-//      devName[key].style.backgroundColor = "#a0a0a0";
-
     }
   }
 
@@ -235,6 +305,11 @@ async function state_refresh(dev, key) {
       blockButton[i].style.backgroundColor = color;
     }
   }
+
+  } else {
+	return;
+  }
+  
 }
 
 function btnSubmit() {
@@ -269,6 +344,8 @@ function showDeviceMenu() {
   var devItem = null;
 
   for (let i = 0; i < deviceList.length; i++) {
+    ssid.push(deviceList[i].ssid);
+    Labels.push(deviceList[i].name);
     // 創建元素
     const buttonContainer = document.createElement('div');
     const devItem = document.createElement('li');
@@ -302,7 +379,111 @@ function showDeviceMenu() {
   }
 }
 
+  var chartData = [];
+
+  var ssid = [];
+  var Labels = [];
+  var Temps = [];
+  var Humis = [];
+  var Mois = [];
+  var Luxs = [];
+  var timestamps = [];
+
+  var reLuxs = [];
+
+  var tempColor = "rgb(255, 99, 132)";
+  var HumiColor = "rgb(132,175,243)";
+  var LuxColor = "rgb(254, 162, 35)";
+  var MosiColor = "rgb(124, 132, 15)";	
+
+  const tData = {
+    labels: Labels,
+    datasets: [{
+      label: '溫度(°C)',
+      data: Temps,
+      fill: false,
+      backgroundColor: tempColor,
+      borderColor: tempColor,
+      pointBackgroundColor: tempColor,
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: tempColor
+    },{
+      label: '濕度(%)',
+      data: Humis,
+      fill: false,
+      backgroundColor: HumiColor,
+      borderColor: HumiColor,
+      pointBackgroundColor: HumiColor,
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: HumiColor
+    }, {
+      label: '土濕(%)',
+      data: Mois,
+      fill: false, 
+      backgroundColor: MosiColor,
+      borderColor: MosiColor,
+      pointBackgroundColor: MosiColor,
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: MosiColor
+    }, {
+      label: '光度(Par)',
+      data: reLuxs,
+      fill: false, 
+      backgroundColor: LuxColor,
+      borderColor: LuxColor,
+      pointBackgroundColor: LuxColor,
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: LuxColor
+    }]
+  };
+
+  const tempConfig = {
+    type: 'radar',
+    data: tData,
+    options: {
+      animations: {
+        tension: {
+          duration: 1000,
+          easing: 'linear',
+          from: 1,
+          to: 0,
+          loop: true
+        }
+      },
+      scales: {
+          r: {
+		max: 100,
+		min: 0,
+              angleLines: {
+                  display: true
+              },
+            ticks: {
+//                stepSize: 10, 
+            },
+            suggestedMin: 0,
+            suggestedMax: 100,
+          }
+      },
+      elements: {
+        line: {
+          borderWidth: 3
+        }
+      }
+    },
+  };
+
+var ctx = null;
+var myChart = null;
+
 window.onload = () => {
+ 
+  const ctx = document.getElementById('tempChart');
+
+  console.log("check....");
   var strJSON = localStorage.getItem('myList');
 
   if (strJSON != null && strJSON != "") {
@@ -310,6 +491,8 @@ window.onload = () => {
     deviceList = JSON.parse(strJSON);
     showDeviceMenu();
   }
+
+  myChart = new Chart(ctx, tempConfig);
 
   //*跳出視窗*//
   let btn = document.querySelector("#show");
@@ -413,3 +596,4 @@ function listenDevice() {
     }
   });
 }
+
