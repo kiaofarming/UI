@@ -320,6 +320,9 @@ hr {
     top: 30px;
     text-align: center;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .wrap {
