@@ -378,6 +378,7 @@ window.onload = () => {
         devID: devID
     }];
 
+    state_refresh(deviceList[0], 0);
 
     //*跳出視窗*//
     let btn = document.querySelector("#show");
