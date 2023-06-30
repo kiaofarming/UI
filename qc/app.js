@@ -6,12 +6,24 @@ var zone = [{
   name : '陽台',
   deviceList : [{
     name: '調光LED燈',
-    tags: ['風扇', '灑水'],
+    tags: [{
+        enable: true,
+	name: '風扇'
+    },{
+	enable: true,
+	name:'灑水'
+    }],
     ssid: 'wf8011',
     devID: 'wjWXd'
   },{
     name: 'Sean專用機',
-    tags: ['關關', '通知燈'],
+    tags: [{
+        enable: true,
+	name: '開關'
+    },{
+	enable: true,
+	name:'通知燈'
+    }],
     ssid: 'wf8010',
     devID: 'QrkNV'
   }]
@@ -19,12 +31,24 @@ var zone = [{
   name : '天台',
   deviceList : [{
     name: '調光LED燈',
-    tags: ['風扇', '灑水'],
+    tags: [{
+        enable: true,
+	name: '風扇'
+    },{
+	enable: true,
+	name:'灑水'
+    }],
     ssid: 'wf8011',
     devID: 'wjWXd'
   },{
     name: 'Sean專用機',
-    tags: ['關關', '通知燈'],
+    tags: [{
+        enable: true,
+	name: '關關'
+    },{
+	enable: true,
+	name:'通知燈'
+    }],
     ssid: 'wf8010',
     devID: 'QrkNV'
   }]
@@ -171,17 +195,20 @@ function viewDevice(key, devices, ports) {
         */
         block.appendChild(blockButton[i]);
     }
-    /*
+/*    
       devList.appendChild(br);
       devList.appendChild(hr);
       devList.appendChild(devName);
       devList.appendChild(devText);
       devList.appendChild(block);
-    */
-    if (1) {
+*/
+    let en = true;
+
+    if (en) {
         devList.appendChild(hr);
         devList.appendChild(devName);
-        devList.appendChild(br);
+//        devList.appendChild(br);
+        devList.appendChild(devText);
         devList.appendChild(block);
     } else {
         devList.appendChild(block);
@@ -377,112 +404,6 @@ function showDeviceMenu() {
     }
 }
 
-var chartData = [];
-
-var ssid = [];
-var Labels = [];
-var Temps = [];
-var Humis = [];
-var Mois = [];
-var Luxs = [];
-var timestamps = [];
-
-var reLuxs = [];
-
-var tempColor = "rgb(255, 99, 132)";
-var HumiColor = "rgb(132,175,243)";
-var LuxColor = "rgb(254, 162, 35)";
-var MosiColor = "rgb(124, 132, 15)";
-
-const tData = {
-    labels: Labels,
-    datasets: [{
-        label: '溫度(°C)',
-        data: Temps,
-        fill: false,
-        backgroundColor: tempColor,
-        borderColor: tempColor,
-        pointBackgroundColor: tempColor,
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: tempColor
-    }, {
-        label: '濕度(%)',
-        data: Humis,
-        fill: false,
-        backgroundColor: HumiColor,
-        borderColor: HumiColor,
-        pointBackgroundColor: HumiColor,
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: HumiColor
-    }, {
-        label: '土濕(%)',
-        data: Mois,
-        fill: false,
-        backgroundColor: MosiColor,
-        borderColor: MosiColor,
-        pointBackgroundColor: MosiColor,
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: MosiColor
-    }, {
-        label: '光度(Par)',
-        data: reLuxs,
-        fill: false,
-        backgroundColor: LuxColor,
-        borderColor: LuxColor,
-        pointBackgroundColor: LuxColor,
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: LuxColor
-    }]
-};
-
-const tempConfig = {
-    type: 'radar',
-    data: tData,
-    options: {
-        /*
-              animations: {
-                tension: {
-                  duration: 1000,
-                  easing: 'linear',
-                  from: 1,
-                  to: 0,
-                  loop: true
-                }
-              },
-        */
-        plugins: {
-            legend: {
-                labels: {
-                    usePointStyle: true,
-                },
-            }
-        },
-        scales: {
-            r: {
-                max: 100,
-                min: 0,
-                angleLines: {
-                    display: true
-                },
-                ticks: {
-                    stepSize: 25,
-                },
-                suggestedMin: 0,
-                suggestedMax: 100,
-            }
-        },
-        elements: {
-            line: {
-                borderWidth: 3
-            }
-        }
-    },
-};
-
 window.onload = () => {
     var url = location.href;
     console.log("check....",url);
@@ -490,8 +411,6 @@ window.onload = () => {
 
     var ssid = strAry[0].split("=")[1];
     var devID = strAry[1].split("=")[1];
-
-    console.log(ssid,devID);
 
     var strJSON = localStorage.getItem('myList');
 
@@ -501,11 +420,18 @@ window.onload = () => {
         showDeviceMenu();
     }
 
-  deviceList = [{
-    name: ssid,
-    tags: ['1', '2'],
-    ssid: ssid,
-    devID: devID}];
+    deviceList = [{
+        name: ssid,
+	tags: [{
+	    enable: true,
+	    name: '1'
+	},{
+	    enable: true,
+	    name:'2'
+	}],
+        ssid: ssid,
+        devID: devID
+    }];
 
 
     //*跳出視窗*//
