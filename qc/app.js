@@ -234,107 +234,53 @@ function viewDevice(key, devices, ports) {
 }
 
 async function state_refresh(dev, key) {
-    if (dev.model == "M101") {
-        let id = ssid.indexOf(dev.ssid);
+    await viewDevice(key, deviceList, 2);
 
-        if (id < 0)
-            return;
+    const device = deviceList[key];
 
-        if (dev.temp != undefined) {
-            Temps[id] = dev.temp;
-        } else {
-            Temps[id] = 0;
-        }
+    const blockState = document.querySelectorAll(`#block${key} span`);
+    const blockButton = document.querySelectorAll(`#block${key} div`);
+    const devName = document.querySelectorAll(`#devList h3`);
+    const devBlock = document.getElementById(`block${key}`);
 
-        if (dev.humi != undefined) {
-            Humis[id] = dev.humi;
-        } else {
-            Humis[id] = 0;
-        }
-
-        if (dev.moisture != undefined) {
-            Mois[id] = (1023 - dev.moisture) * 100 / 1023;
-        } else {
-            Mois[id] = 0;
-        }
-
-        if (dev.light != undefined) {
-            Luxs[id] = dev.light;
-        } else {
-            Luxs[id] = 0;
-        }
-
-        let maxLux = Math.max.apply(null, Luxs);
-
-        for (let i = 0; i < Luxs.length; i++) {
-            reLuxs[i] = ((Luxs[i] / maxLux) * 100);
-        }
-
-        if (dev.timestamp != undefined) {
-            timestamps[id] = dev.timestamp;
-        } else {
-            timestamps[id] = 0;
-        }
-
-    } else if (dev.model == "M207") {
-        let id = ssid.indexOf(dev.ssid);
-        if (id >= 0) {
-            ssid.splice(id, 1);
-            Labels.splice(id, 1);
-        }
-
-        await viewDevice(key, deviceList, 2);
-
-        const device = deviceList[key];
-
-        const blockState = document.querySelectorAll(`#block${key} span`);
-        const blockButton = document.querySelectorAll(`#block${key} div`);
-        const devName = document.querySelectorAll(`#devList h3`);
-        const devBlock = document.getElementById(`block${key}`);
-
-        if (dev.online != undefined) {
-            if (dev.online == true) {
-                if (devName.length == 0) {
-                    for (let i = 0; i < dev.switch.length; i++) {
-                        blockState[i].style.color = '#202020';
-                        blockButton[i].style.color = '#202020';
-                    }
-                    devBlock.disabled = true;
-                } else {
-                    devName[key].style.backgroundColor = "#1C8686";
+    if (dev.online != undefined) {
+        if (dev.online == true) {
+            if (devName.length == 0) {
+                for (let i = 0; i < dev.switch.length; i++) {
+                    blockState[i].style.color = '#202020';
+                    blockButton[i].style.color = '#202020';
                 }
+                devBlock.disabled = true;
             } else {
-                console.log(devName, dev);
-                if (devName.length == 0) {
-                    for (let i = 0; i < dev.switch.length; i++) {
-                        blockState[i].style.color = '#909090';
-                        blockButton[i].style.color = '#909090';
-                    }
-                    devBlock.disabled = false;
-                } else {
-                    devName[key].style.backgroundColor = "#a0a0a0";
+                devName[key].style.backgroundColor = "#1C8686";
+            }
+        } else {
+            console.log(devName, dev);
+            if (devName.length == 0) {
+                for (let i = 0; i < dev.switch.length; i++) {
+                    blockState[i].style.color = '#909090';
+                    blockButton[i].style.color = '#909090';
                 }
+                devBlock.disabled = false;
+            } else {
+                devName[key].style.backgroundColor = "#a0a0a0";
             }
         }
-
-        if (dev.switch != undefined) {
-            for (let i = 0; i < dev.switch.length; i++) {
-                let st = 'OFF';
-                let color = '#E0E0E0';
-                if (dev.switch[i] == true) {
-                    st = 'ON';
-                    color = '#8FCDE4';
-                }
-
-                blockState[i].textContent = st;
-                blockButton[i].style.backgroundColor = color;
-            }
-        }
-
-    } else {
-        return;
     }
 
+    if (dev.switch != undefined) {
+        for (let i = 0; i < dev.switch.length; i++) {
+            let st = 'OFF';
+            let color = '#E0E0E0';
+            if (dev.switch[i] == true) {
+                st = 'ON';
+                color = '#8FCDE4';
+            }
+
+            blockState[i].textContent = st;
+            blockButton[i].style.backgroundColor = color;
+        }
+    }
 }
 
 function btnSubmit() {
@@ -370,7 +316,6 @@ function showDeviceMenu() {
 
     for (let i = 0; i < deviceList.length; i++) {
         ssid.push(deviceList[i].ssid);
-        Labels.push(deviceList[i].name);
         // 創建元素
         const buttonContainer = document.createElement('div');
         const devItem = document.createElement('li');
