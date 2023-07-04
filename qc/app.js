@@ -6,24 +6,12 @@ var zone = [{
   name : '陽台',
   deviceList : [{
     name: '調光LED燈',
-    tags: [{
-        enable: true,
-	name: '風扇'
-    },{
-	enable: true,
-	name:'灑水'
-    }],
+    tags: ['風扇', '灑水'],
     ssid: 'wf8011',
     devID: 'wjWXd'
   },{
     name: 'Sean專用機',
-    tags: [{
-        enable: true,
-	name: '開關'
-    },{
-	enable: true,
-	name:'通知燈'
-    }],
+    tags: ['關關', '通知燈'],
     ssid: 'wf8010',
     devID: 'QrkNV'
   }]
@@ -31,32 +19,61 @@ var zone = [{
   name : '天台',
   deviceList : [{
     name: '調光LED燈',
-    tags: [{
-        enable: true,
-	name: '風扇'
-    },{
-	enable: true,
-	name:'灑水'
-    }],
+    tags: ['風扇', '灑水'],
     ssid: 'wf8011',
     devID: 'wjWXd'
   },{
     name: 'Sean專用機',
-    tags: [{
-        enable: true,
-	name: '關關'
-    },{
-	enable: true,
-	name:'通知燈'
-    }],
+    tags: ['關關', '通知燈'],
     ssid: 'wf8010',
     devID: 'QrkNV'
   }]
 }];
 */
 
-//let url = '?openExternalBrowser=1';
-//window.history.pushState(null, null, url);
+var url = location.href;
+
+console.log("check....", url);
+
+const strAry = url.split("?")[1].split("&");
+
+var SSID = '';
+var DEVID = '';
+
+var devItem = undefined;
+
+if (strAry.length >= 2) {
+    strAry.forEach((e, index) => {
+        let self = e;
+        let i = index;
+        if (e.indexOf('ssid') == 0) {
+            SSID = e.split("=")[1];
+        } else if (e.indexOf('devID') == 0) {
+            DEVID = e.split("=")[1];
+        }
+    });
+
+
+    if (SSID != '' && DEVID != '') {
+        devItem = {
+            name: SSID,
+            tags: [{
+                enable: true,
+                name: '1'
+            }, {
+                enable: true,
+                name: '2'
+            }],
+            ssid: SSID,
+	    model: 'M207',
+	    online: false,
+            devID: DEVID
+        };
+    }
+}
+
+url = '?openExternalBrowser=1';
+window.history.pushState(null, null, url);
 
 var deviceList = new Array();
 
@@ -72,7 +89,9 @@ function reloadWindow() {
 }
 
 function download(filename, data) {
-    const blob = new Blob([data], { type: 'text/csv' });
+    const blob = new Blob([data], {
+        type: 'text/csv'
+    });
     if (window.navigator.msSaveOrOpenBlob) {
         window.navigator.msSaveBlob(blob, filename);
     } else {
@@ -195,21 +214,18 @@ function viewDevice(key, devices, ports) {
         */
         block.appendChild(blockButton[i]);
     }
-/*    
+    /*
       devList.appendChild(br);
       devList.appendChild(hr);
       devList.appendChild(devName);
       devList.appendChild(devText);
       devList.appendChild(block);
-*/
-    let en = true;
-
-    if (en) {
-        devList.appendChild(hr);
+    */
+    if (1) {
         devList.appendChild(devName);
-//        devList.appendChild(br);
-        devList.appendChild(devText);
+        devList.appendChild(br);
         devList.appendChild(block);
+        devList.appendChild(hr);
     } else {
         devList.appendChild(block);
     }
@@ -234,53 +250,110 @@ function viewDevice(key, devices, ports) {
 }
 
 async function state_refresh(dev, key) {
-    await viewDevice(key, deviceList, 2);
+    if (dev.model == "M101") {
+        let id = ssid.indexOf(dev.ssid);
 
-    const device = deviceList[key];
+        if (id < 0)
+            return;
 
-    const blockState = document.querySelectorAll(`#block${key} span`);
-    const blockButton = document.querySelectorAll(`#block${key} div`);
-    const devName = document.querySelectorAll(`#devList h3`);
-    const devBlock = document.getElementById(`block${key}`);
-
-    if (dev.online != undefined) {
-        if (dev.online == true) {
-            if (devName.length == 0) {
-                for (let i = 0; i < dev.switch.length; i++) {
-                    blockState[i].style.color = '#202020';
-                    blockButton[i].style.color = '#202020';
-                }
-                devBlock.disabled = true;
-            } else {
-                devName[key].style.backgroundColor = "#1C8686";
-            }
+        if (dev.temp != undefined) {
+            Temps[id] = dev.temp;
         } else {
-            console.log(devName, dev);
-            if (devName.length == 0) {
-                for (let i = 0; i < dev.switch.length; i++) {
-                    blockState[i].style.color = '#909090';
-                    blockButton[i].style.color = '#909090';
+            Temps[id] = 0;
+        }
+
+        if (dev.humi != undefined) {
+            Humis[id] = dev.humi;
+        } else {
+            Humis[id] = 0;
+        }
+
+        if (dev.moisture != undefined) {
+            Mois[id] = (1023 - dev.moisture) * 100 / 1023;
+        } else {
+            Mois[id] = 0;
+        }
+
+        if (dev.light != undefined) {
+            Luxs[id] = dev.light;
+        } else {
+            Luxs[id] = 0;
+        }
+
+        let maxLux = Math.max.apply(null, Luxs);
+
+        for (let i = 0; i < Luxs.length; i++) {
+            reLuxs[i] = ((Luxs[i] / maxLux) * 100);
+        }
+
+        if (dev.timestamp != undefined) {
+            timestamps[id] = dev.timestamp;
+        } else {
+            timestamps[id] = 0;
+        }
+
+        myChart.update();
+    } else if (dev.model == "M207") {
+        console.log(key, dev);
+
+	let id = ssid.indexOf(dev.ssid);
+
+	if (id >= 0) {
+            ssid.splice(id, 1);
+            Labels.splice(id, 1);
+        }
+
+        await viewDevice(key, deviceList, 2);
+
+        const device = deviceList[key];
+
+        const blockState = document.querySelectorAll(`#block${key} span`);
+        const blockButton = document.querySelectorAll(`#block${key} div`);
+        const devName = document.querySelectorAll(`#devList h3`);
+        const devBlock = document.getElementById(`block${key}`);
+
+        if (dev.online != undefined) {
+            if (dev.online == true) {
+                if (devName.length == 0) {
+                    for (let i = 0; i < dev.switch.length; i++) {
+                        blockState[i].style.color = '#202020';
+                        blockButton[i].style.color = '#202020';
+                    }
+                    devBlock.disabled = true;
+                } else {
+                    devName[key].style.backgroundColor = "#1C8686";
                 }
-                devBlock.disabled = false;
             } else {
-                devName[key].style.backgroundColor = "#a0a0a0";
+                if (devName.length == 0) {
+                    for (let i = 0; i < dev.switch.length; i++) {
+                        blockState[i].style.color = '#909090';
+                        blockButton[i].style.color = '#909090';
+                    }
+                    devBlock.disabled = false;
+                } else {
+                    devName[key].style.backgroundColor = "#a0a0a0";
+                }
             }
         }
-    }
 
-    if (dev.switch != undefined) {
-        for (let i = 0; i < dev.switch.length; i++) {
-            let st = 'OFF';
-            let color = '#E0E0E0';
-            if (dev.switch[i] == true) {
-                st = 'ON';
-                color = '#8FCDE4';
+        if (dev.switch != undefined) {
+            for (let i = 0; i < dev.switch.length; i++) {
+                let st = 'OFF';
+                let color = '#E0E0E0';
+                if (dev.switch[i] == true) {
+                    st = 'ON';
+                    color = '#8FCDE4';
+                }
+
+                blockState[i].textContent = st;
+                blockButton[i].style.backgroundColor = color;
             }
-
-            blockState[i].textContent = st;
-            blockButton[i].style.backgroundColor = color;
         }
+
+    } else {
+        return;
     }
+
 }
 
 function btnSubmit() {
@@ -316,6 +389,7 @@ function showDeviceMenu() {
 
     for (let i = 0; i < deviceList.length; i++) {
         ssid.push(deviceList[i].ssid);
+        Labels.push(deviceList[i].name);
         // 創建元素
         const buttonContainer = document.createElement('div');
         const devItem = document.createElement('li');
@@ -349,36 +423,137 @@ function showDeviceMenu() {
     }
 }
 
+var chartData = [];
+
+var ssid = [];
+var Labels = [];
+var Temps = [];
+var Humis = [];
+var Mois = [];
+var Luxs = [];
+var timestamps = [];
+
+var reLuxs = [];
+
+var tempColor = "rgb(255, 99, 132)";
+var HumiColor = "rgb(132,175,243)";
+var LuxColor = "rgb(254, 162, 35)";
+var MosiColor = "rgb(124, 132, 15)";
+
+const tData = {
+    labels: Labels,
+    datasets: [{
+        label: '溫度(°C)',
+        data: Temps,
+        fill: false,
+        backgroundColor: tempColor,
+        borderColor: tempColor,
+        pointBackgroundColor: tempColor,
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: tempColor
+    }, {
+        label: '濕度(%)',
+        data: Humis,
+        fill: false,
+        backgroundColor: HumiColor,
+        borderColor: HumiColor,
+        pointBackgroundColor: HumiColor,
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: HumiColor
+    }, {
+        label: '土濕(%)',
+        data: Mois,
+        fill: false,
+        backgroundColor: MosiColor,
+        borderColor: MosiColor,
+        pointBackgroundColor: MosiColor,
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: MosiColor
+    }, {
+        label: '光度(Par)',
+        data: reLuxs,
+        fill: false,
+        backgroundColor: LuxColor,
+        borderColor: LuxColor,
+        pointBackgroundColor: LuxColor,
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: LuxColor
+    }]
+};
+
+const tempConfig = {
+    type: 'radar',
+    data: tData,
+    options: {
+        /*
+              animations: {
+                tension: {
+                  duration: 1000,
+                  easing: 'linear',
+                  from: 1,
+                  to: 0,
+                  loop: true
+                }
+              },
+        */
+        plugins: {
+            legend: {
+                labels: {
+                    usePointStyle: true,
+                },
+            }
+        },
+        scales: {
+            r: {
+                max: 100,
+                min: 0,
+                angleLines: {
+                    display: true
+                },
+                ticks: {
+                    stepSize: 25,
+                },
+                suggestedMin: 0,
+                suggestedMax: 100,
+            }
+        },
+        elements: {
+            line: {
+                borderWidth: 3
+            }
+        }
+    },
+};
+
+var ctx = null;
+var myChart = null;
+
 window.onload = () => {
-    var url = location.href;
-    console.log("check....",url);
-    const strAry = url.split("?")[1].split("&");
+    const ctx = document.getElementById('tempChart');
 
-    var ssid = strAry[0].split("=")[1];
-    var devID = strAry[1].split("=")[1];
-
+    console.log("check....");
     var strJSON = localStorage.getItem('myList');
 
     if (strJSON != null && strJSON != "") {
-        console.log(strJSON);
+//        console.log(strJSON);
         deviceList = JSON.parse(strJSON);
         showDeviceMenu();
     }
+    
+    if(devItem != undefined) {
+        deviceList.unshift(devItem);
+        console.log(deviceList);
+    }
 
-    deviceList = [{
-        name: ssid,
-	tags: [{
-	    enable: true,
-	    name: '1'
-	},{
-	    enable: true,
-	    name:'2'
-	}],
-        ssid: ssid,
-        devID: devID
-    }];
+    deviceList.forEach((e, index) => {
+        state_refresh(e, index);
+    });
 
-    state_refresh(deviceList[0], 0);
+    myChart = new Chart(ctx, tempConfig);
 
     //*跳出視窗*//
     let btn = document.querySelector("#show");
@@ -390,7 +565,8 @@ window.onload = () => {
     uploadBtn.addEventListener("change", function() {
         //  uploadBtn.addEventListener("click",function (){
         var files = this.files;
-        if (files.length === 0) {
+
+	if (files.length === 0) {
             console.log('No file is selected');
             return;
         }
