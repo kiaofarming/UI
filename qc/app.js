@@ -70,6 +70,8 @@ if(url.indexOf("?")>0) {
 		    online: false,
 		    devID: DEVID
 		};
+
+		console.log(devItem);
 	    }
 	}
 }
