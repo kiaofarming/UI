@@ -40,11 +40,13 @@ var DEVID = undefined;
 console.log("check....", url);
 if(url.indexOf("?")>0) {
 	const strAry = url.split("?")[1].split("&");
-
 	var devItem = undefined;
+
+	console.log(strAry)
 
 	if (strAry.length >= 2) {
 	    strAry.forEach((e, index) => {
+		console.log(e);
 		let self = e;
 		let i = index;
 		if (e.indexOf('ssid') == 0) {
