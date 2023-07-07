@@ -72,8 +72,8 @@ if (strAry.length >= 2) {
     }
 }
 
-url = '?openExternalBrowser=1';
-window.history.pushState(null, null, url);
+//url = '?openExternalBrowser=1';
+//window.history.pushState(null, null, url);
 
 var deviceList = new Array();
 
