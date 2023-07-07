@@ -42,21 +42,16 @@ if(url.indexOf("?")>0) {
 	const strAry = url.split("?")[1].split("&");
 	var devItem = undefined;
 
-	console.log(strAry)
-
 	if (strAry.length >= 2) {
 	    strAry.forEach((e, index) => {
-		console.log(e);
 		let self = e;
 		let i = index;
 		if (e.indexOf('ssid') == 0) {
 		    SSID = e.split("=")[1];
-		} else if (e.indexOf('devID') == 0) {
+		} else if (e.indexOf('devid') == 0) {
 		    DEVID = e.split("=")[1];
 		}
 	    });
-
-	    console.log(SSID, DEVID);
 
 	    if (SSID != '' && DEVID != '') {
 		devItem = {
@@ -73,8 +68,6 @@ if(url.indexOf("?")>0) {
 		    online: false,
 		    devID: DEVID
 		};
-
-		console.log(devItem);
 	    }
 	}
 }
