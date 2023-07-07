@@ -54,6 +54,7 @@ if(url.indexOf("?")>0) {
 		}
 	    });
 
+	    console.log(SSID, DEVID);
 
 	    if (SSID != '' && DEVID != '') {
 		devItem = {
