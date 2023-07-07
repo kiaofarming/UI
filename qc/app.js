@@ -33,43 +33,45 @@ var zone = [{
 
 var url = location.href;
 
+
+var SSID = undefined;
+var DEVID = undefined;
+
 console.log("check....", url);
+if(url.indexOf("?")>0) {
+	const strAry = url.split("?")[1].split("&");
 
-const strAry = url.split("?")[1].split("&");
+	var devItem = undefined;
 
-var SSID = '';
-var DEVID = '';
-
-var devItem = undefined;
-
-if (strAry.length >= 2) {
-    strAry.forEach((e, index) => {
-        let self = e;
-        let i = index;
-        if (e.indexOf('ssid') == 0) {
-            SSID = e.split("=")[1];
-        } else if (e.indexOf('devID') == 0) {
-            DEVID = e.split("=")[1];
-        }
-    });
+	if (strAry.length >= 2) {
+	    strAry.forEach((e, index) => {
+		let self = e;
+		let i = index;
+		if (e.indexOf('ssid') == 0) {
+		    SSID = e.split("=")[1];
+		} else if (e.indexOf('devID') == 0) {
+		    DEVID = e.split("=")[1];
+		}
+	    });
 
 
-    if (SSID != '' && DEVID != '') {
-        devItem = {
-            name: SSID,
-            tags: [{
-                enable: true,
-                name: '1'
-            }, {
-                enable: true,
-                name: '2'
-            }],
-            ssid: SSID,
-	    model: 'M207',
-	    online: false,
-            devID: DEVID
-        };
-    }
+	    if (SSID != '' && DEVID != '') {
+		devItem = {
+		    name: SSID,
+		    tags: [{
+			enable: true,
+			name: '1'
+		    }, {
+			enable: true,
+			name: '2'
+		    }],
+		    ssid: SSID,
+		    model: 'M207',
+		    online: false,
+		    devID: DEVID
+		};
+	    }
+	}
 }
 
 //url = '?openExternalBrowser=1';
