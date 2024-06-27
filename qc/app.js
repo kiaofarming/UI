@@ -104,16 +104,16 @@ function download(filename, data) {
     }
 }
 
-function set_switch(dev_id, port, sw, cb) {
-    let req_data = {};
-    req_data[`port${port}`] = sw;
+//function set_switch(dev_id, port, sw, cb) {
+function set_switch(ssid, port, sw, cb) {
+    let req_data = `{"deviceID": "${ssid}-000${port}","deviceFeatureName": "MultiActuators","settingValue": "${sw}"}`;
 
     $.ajax({
-        url: `${API_HOST}/${API_VER}/controller/switch/${dev_id}`,
+        url: `${API_HOST}/kiaocloud/Settings`,
         method: "POST",
-        contentType: "application/x-www-form-urlencoded",
+        contentType: "application/json",
         headers: {
-            "Authorization": "Bearer {nTqOrlSptF156qc26duTSQhmuWFVA2RCeLCRRaenTb2}",
+            "Authorization": "Bearer Zjw3O2lmO2gzNz1hMzw4Yj40Yj5jZmlhNzxmNzxmZmhmYjw1Nz1mMzxkZjwyOz5kNz04Ozw4NzxiYjxjMz01Nw.QD40O0FCRD0xNzxCREA2M0BBO0BDQD03Oz0yNz0xRD4A",
         },
         dataType: "json",
         data: req_data
@@ -236,15 +236,15 @@ function viewDevice(key, devices, ports) {
 
         self.addEventListener('click', (ev) => {
             let st = blockState[i].textContent;
-            let sw = 'off';
+            let sw = 'OFF';
 
             if (st == 'OFF') {
-                sw = 'on';
+                sw = 'ON';
             } else {
-                sw = 'off';
+                sw = 'OFF';
             }
 
-            set_switch(deviceList[key].devID, (i + 1), sw, process_switch_response);
+            set_switch(deviceList[key].ssid, (i + 1), sw, process_switch_response);
         });
     });
 }
